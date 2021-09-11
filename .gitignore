@@ -64,3 +64,7 @@ HorrorGame/Library/Artifacts/00/0001f3fc214d89afd5d1de593f538862
 *.uxml
 *.md
 *.txt
+HorrorGame/Temp/UnityLockfile
+HorrorGame/Library/SourceAssetDB
+*.log
+HorrorGame/Library/ArtifactDB
