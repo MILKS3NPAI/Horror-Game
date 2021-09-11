@@ -58,3 +58,9 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+*.meta
+HorrorGame/Library/Artifacts/00/0001f3fc214d89afd5d1de593f538862
+*.json
+*.uxml
+*.md
+*.txt
