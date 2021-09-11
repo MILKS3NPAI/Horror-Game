@@ -1,0 +1,6 @@
+HorrorGame/Library
+HorrorGame/ProjectSettings
+HorrorGame/UserSettings
+*.meta
+*.dll
+*.xml
