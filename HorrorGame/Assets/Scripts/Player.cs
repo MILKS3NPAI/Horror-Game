@@ -24,8 +24,9 @@ public class Player : Entity
 		{
 			lMovement.y = -1f;
 		}
-		RunPhysicsStep();
 		MoveRelative(lMovement.normalized);
-		body.MovePosition(body.position + (totalMovement * Time.fixedDeltaTime));
+		base.FixedUpdate();
+		//RunPhysicsStep();
+		//body.MovePosition(body.position + (totalMovement * Time.fixedDeltaTime));
 	}
 }

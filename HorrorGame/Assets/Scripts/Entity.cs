@@ -20,15 +20,16 @@ public class Entity : MonoBehaviour
 	protected Vector2 totalMovement = new Vector2();
 	float slopeRayLength = 10f;
 	float slopeRange = 50f;
+	[SerializeField]
 	Vector2 velocity = new Vector2();
 	protected Rigidbody2D body;
 	new protected BoxCollider2D collider;
 	[SerializeField]
 	bool groundDetected = false;
-	ContactFilter2D groundFilter = new ContactFilter2D();
+	ContactFilter2D mGroundFilter { get { return ConstantResources.sGroundMask; } }
 	public Vector2 mPosition2D { get { return new Vector2(transform.position.x, transform.position.y); } }
 	public Vector2 mPosition { get { return transform.position; } }
-	bool mGrounded { get { return groundDetected && (body.velocity.y <= 0); } }
+	bool mGrounded { get { return groundDetected && (velocity.y <= 0); } }
 
 	private void Awake()
 	{
@@ -42,8 +43,6 @@ public class Entity : MonoBehaviour
 			Debug.LogError("Rigidbody not able to be acquired and not set. Was it not enabled in the scene?", gameObject);
 		}
 		collider = GetComponent<BoxCollider2D>();
-		groundFilter.layerMask = LayerMask.GetMask("Terrain");
-		groundFilter.useLayerMask = true;
 	}
 
 	public void Jump()
@@ -58,7 +57,7 @@ public class Entity : MonoBehaviour
 	{
 		if (Application.isPlaying)
 		{
-			Gizmos.DrawCube(mPosition + Vector2.down * groundDistance * -velocity.y * Time.fixedDeltaTime, collider.size);
+			Gizmos.DrawWireCube(mPosition + Vector2.down * groundDistance * -velocity.y * Time.fixedDeltaTime, collider.size * transform.localScale.y);
 		}
 	}
 
@@ -67,13 +66,12 @@ public class Entity : MonoBehaviour
 		List<RaycastHit2D> lHits = new List<RaycastHit2D>();
 		groundDetected = false;
 		//Debug.Log("Boxcast " + mPosition2D + ". Distance: " + groundDistance * -velocity.y * Time.fixedDeltaTime);
-		if (Physics2D.BoxCast(mPosition2D, collider.size, 0f, Vector2.down, groundFilter, lHits, groundDistance * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime) > 0)
+		if (Physics2D.BoxCast(mPosition2D, collider.size * transform.localScale.y, 0f, Vector2.down, mGroundFilter, lHits, groundDistance * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime) > 0)
 		{
 			foreach (RaycastHit2D lHit in lHits)
 			{
 				if (lHit.point.y <= mPosition2D.y && velocity.y <= 0)
 				{
-					Debug.Log("Normal: " + lHit.normal);
 					velocity.y = 0f;
 				}
 			}
@@ -85,6 +83,8 @@ public class Entity : MonoBehaviour
 		}
 		else
 		{
+			if (this is Enemy)
+				Debug.Log("The velocity route");
 			velocity.y -= gravity * Time.fixedDeltaTime;
 		}
 		totalMovement += velocity;
@@ -92,9 +92,9 @@ public class Entity : MonoBehaviour
 
 	protected virtual void FixedUpdate()
 	{
-		totalMovement = Vector2.zero;
 		RunPhysicsStep();
-		body.MovePosition(body.position + totalMovement);
+		body.MovePosition(body.position + (totalMovement * Time.fixedDeltaTime));
+		totalMovement = Vector2.zero;
 	}
 
 	public void MoveRelative(Vector2 iMovement)
@@ -112,9 +112,10 @@ public class Entity : MonoBehaviour
 		if (mGrounded)
 		{
 			totalMovement += (Vector2.ClampMagnitude(lMovement, 1.0f) * moveSpeed);
-			if (Physics2D.Raycast(transform.position, -transform.up, groundFilter, lHits, (collider.size.y/2) * slopeRayLength) > 0)
+			if (Physics2D.Raycast(transform.position, -transform.up, mGroundFilter, lHits, (collider.size.y / 2) * slopeRayLength) > 0)
 			{
-				foreach(RaycastHit2D lHit in lHits) {
+				foreach (RaycastHit2D lHit in lHits)
+				{
 					if (lHit.normal != Vector2.up)
 					{
 						totalMovement += (-Vector2.up * (collider.size.y / 2) * slopeRange * Time.fixedDeltaTime);
