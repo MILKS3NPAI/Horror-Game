@@ -65,7 +65,7 @@ public class Entity : MonoBehaviour
 		List<RaycastHit2D> lHits = new List<RaycastHit2D>();
 		groundDetected = false;
 		//Debug.Log("Boxcast " + mPosition2D + ". Distance: " + groundDistance * -velocity.y * Time.fixedDeltaTime);
-		if (Physics2D.BoxCast(mPosition2D, collider.size, 0f, Vector2.down, groundFilter, lHits, groundDistance * Mathf.Max(-velocity.y,minDist) * Time.fixedDeltaTime) > 0)
+		if (Physics2D.BoxCast(mPosition2D, collider.size, 0f, Vector2.down, groundFilter, lHits, groundDistance * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime) > 0)
 		{
 			foreach (RaycastHit2D lHit in lHits)
 			{

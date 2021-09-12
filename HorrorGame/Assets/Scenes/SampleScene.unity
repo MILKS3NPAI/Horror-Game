@@ -463,7 +463,7 @@ MonoBehaviour:
   moveSpeed: 5
   groundDistance: 0.2
   maxSlope: 60
-  gravity: 9.86
+  gravity: 20
   totalMovement: {x: 0, y: 0}
   groundDetected: 0
 --- !u!1 &1550293241
