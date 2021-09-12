@@ -402,7 +402,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 185d0d96e5846b74ebd9c2abb1d19259, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 44873d2074c93fb42acc1739dd2dbbdc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -457,14 +457,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1340950552}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8526dc1e0f5e312419665640ff935865, type: 3}
+  m_Script: {fileID: 11500000, guid: ec235564d183a734c8cca8daf97b12fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   jumpStrength: 10
-  moveSpeed: 7
+  moveSpeed: 5
   groundDistance: 0.2
   maxSlope: 60
-  gravity: 20
+  gravity: 9.86
   totalMovement: {x: 0, y: 0}
   groundDetected: 0
 --- !u!95 &1340950558
@@ -477,7 +477,7 @@ Animator:
   m_GameObject: {fileID: 1340950552}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8b919a6eccecd8c40a709174d4b87d4e, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
