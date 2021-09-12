@@ -218,7 +218,7 @@ GameObject:
   - component: {fileID: 818801372}
   - component: {fileID: 818801374}
   m_Layer: 8
-  m_Name: New Sprite (1)
+  m_Name: Floor Flat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -328,8 +328,9 @@ GameObject:
   - component: {fileID: 1340950557}
   - component: {fileID: 1340950553}
   - component: {fileID: 1340950556}
+  - component: {fileID: 1340950558}
   m_Layer: 0
-  m_Name: New Sprite
+  m_Name: Player_Standin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -460,12 +461,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpStrength: 10
-  moveSpeed: 10
+  moveSpeed: 7
   groundDistance: 0.2
   maxSlope: 60
   gravity: 20
   totalMovement: {x: 0, y: 0}
   groundDetected: 0
+--- !u!95 &1340950558
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340950552}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8b919a6eccecd8c40a709174d4b87d4e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1550293241
 GameObject:
   m_ObjectHideFlags: 0
@@ -478,7 +498,7 @@ GameObject:
   - component: {fileID: 1550293243}
   - component: {fileID: 1550293242}
   m_Layer: 8
-  m_Name: New Sprite (2)
+  m_Name: Floor Tilted
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
