@@ -18,6 +18,8 @@ public class Entity : MonoBehaviour
 	float minDist = 9.86f;
 	[SerializeField]
 	protected Vector2 totalMovement = new Vector2();
+	float slopeRayLength = 10f;
+	float slopeRange = 50f;
 	Vector2 velocity = new Vector2();
 	protected Rigidbody2D body;
 	new protected BoxCollider2D collider;
@@ -107,6 +109,22 @@ public class Entity : MonoBehaviour
 			Jump();
 		}
 		List<RaycastHit2D> lHits = new List<RaycastHit2D>();
-		totalMovement += (lMovement * moveSpeed * Time.fixedDeltaTime);
+		if (mGrounded)
+		{
+			totalMovement += (Vector2.ClampMagnitude(lMovement, 1.0f) * moveSpeed);
+			if (Physics2D.Raycast(transform.position, -transform.up, groundFilter, lHits, (collider.size.y/2) * slopeRayLength) > 0)
+			{
+				foreach(RaycastHit2D lHit in lHits) {
+					if (lHit.normal != Vector2.up)
+					{
+						totalMovement += (-Vector2.up * (collider.size.y / 2) * slopeRange * Time.fixedDeltaTime);
+					}
+				}
+			}
+		}
+		else
+		{
+			totalMovement += (Vector2.ClampMagnitude(lMovement, 1.0f) * moveSpeed);
+		}
 	}
 }
