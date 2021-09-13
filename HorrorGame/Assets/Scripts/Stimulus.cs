@@ -10,7 +10,7 @@ public class Stimulus : IComparable<Stimulus>
 {
 	public int priority;
 	public float range;
-	public STIMULUS stimulusType;
+	public StimulusType stimulusType;
 	public Vector2 sourceLocation;
 	public Vector2 receiverLocation;
 	public float mDistance { get { float lDist = Vector2.Distance(sourceLocation, receiverLocation); if (lDist > range) return 0; return 1f/lDist; } }

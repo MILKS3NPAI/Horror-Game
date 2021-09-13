@@ -12,7 +12,7 @@ public class Entity : MonoBehaviour
 	[SerializeField]
 	float groundDistance = .2f;
 	[SerializeField]
-	float maxSlope = 60f;
+	float maxSlope = .4f;
 	[SerializeField]
 	float gravity = 9.86f;
 	float minDist = 9.86f;
@@ -22,7 +22,7 @@ public class Entity : MonoBehaviour
 	float slopeRange = 50f;
 	[SerializeField]
 	Vector2 velocity = new Vector2();
-	protected Rigidbody2D body;
+	Rigidbody2D body;
 	new protected BoxCollider2D collider;
 	[SerializeField]
 	bool groundDetected = false;
@@ -31,7 +31,7 @@ public class Entity : MonoBehaviour
 	public Vector2 mPosition { get { return transform.position; } }
 	bool mGrounded { get { return groundDetected && (velocity.y <= 0); } }
 
-	private void Awake()
+	protected virtual void Awake()
 	{
 		Rigidbody2D lBody = GetComponent<Rigidbody2D>();
 		if (lBody != null)
@@ -43,6 +43,11 @@ public class Entity : MonoBehaviour
 			Debug.LogError("Rigidbody not able to be acquired and not set. Was it not enabled in the scene?", gameObject);
 		}
 		collider = GetComponent<BoxCollider2D>();
+	}
+
+	protected virtual void Start()
+	{
+		return;
 	}
 
 	public void Jump()
@@ -61,6 +66,16 @@ public class Entity : MonoBehaviour
 		}
 	}
 
+	protected virtual void Update()
+	{
+		return;
+	}
+
+	protected virtual void OnCollisionEnter(Collision iOther)
+	{
+		Debug.Log("Collision: " + iOther);
+	}
+
 	protected virtual void RunPhysicsStep()
 	{
 		List<RaycastHit2D> lHits = new List<RaycastHit2D>();
@@ -70,21 +85,17 @@ public class Entity : MonoBehaviour
 		{
 			foreach (RaycastHit2D lHit in lHits)
 			{
-				if (lHit.point.y <= mPosition2D.y && velocity.y <= 0)
+				if (lHit.point.y <= (mPosition2D.y - (collider.size.y * transform.localScale.y * .5f)) && velocity.y <= 0 && Vector2.Dot(lHit.normal, Vector2.up) > maxSlope)
 				{
 					velocity.y = 0f;
+					body.MovePosition(lHits[0].point);
+					groundDetected = true;
+					break;
 				}
 			}
-			groundDetected = true;
 		}
-		if (mGrounded && velocity.y <= 0)
+		if(!groundDetected)
 		{
-			body.MovePosition(lHits[0].point);
-		}
-		else
-		{
-			if (this is Enemy)
-				Debug.Log("The velocity route");
 			velocity.y -= gravity * Time.fixedDeltaTime;
 		}
 		totalMovement += velocity;
