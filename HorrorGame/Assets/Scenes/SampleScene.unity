@@ -551,7 +551,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -571,7 +571,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpStrength: 10
   moveSpeed: 7
-  groundDistance: 0.2
+  groundDistance: 0.77
   maxSlope: 0.4
   gravity: 20
   totalMovement: {x: 0, y: 0}
@@ -616,7 +616,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &1439397969
 Animator:
   serializedVersion: 3
@@ -690,7 +690,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1439397968}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: baaf9682bf3545048bce765e4ca3e963, type: 3}
   m_Name: 
