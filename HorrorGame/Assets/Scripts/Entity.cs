@@ -5,8 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Entity : MonoBehaviour
 {
+	//The velocity given when a character jumps.
 	[SerializeField]
 	float jumpStrength = 10f;
+	//How fast the character moves through the world.
 	[SerializeField]
 	float moveSpeed = 5f;
 	[SerializeField]
@@ -94,7 +96,7 @@ public class Entity : MonoBehaviour
 				}
 			}
 		}
-		if(!groundDetected)
+		if (!groundDetected)
 		{
 			velocity.y -= gravity * Time.fixedDeltaTime;
 		}
@@ -122,14 +124,21 @@ public class Entity : MonoBehaviour
 		List<RaycastHit2D> lHits = new List<RaycastHit2D>();
 		if (mGrounded)
 		{
-			totalMovement += (Vector2.ClampMagnitude(lMovement, 1.0f) * moveSpeed);
-			if (Physics2D.Raycast(transform.position, -transform.up, mGroundFilter, lHits, (collider.size.y / 2) * slopeRayLength) > 0)
+			//totalMovement += (Vector2.ClampMagnitude(lMovement, 1.0f) * moveSpeed);
+			if (Physics2D.BoxCast(mPosition2D, collider.size * transform.localScale.y, 0f, Vector2.down, mGroundFilter, lHits, groundDistance * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime) > 0 && iMovement.x != 0)
 			{
 				foreach (RaycastHit2D lHit in lHits)
 				{
-					if (lHit.normal != Vector2.up)
+					if (lHit.point.y <= (mPosition2D.y - (collider.size.y * transform.localScale.y * .5f)) && velocity.y <= 0 && Vector2.Dot(lHit.normal, Vector2.up) > maxSlope)
+						{
+						Vector2 lSlope = new Vector2(lHit.normal.y * lMovement.x, lHit.normal.x * -lMovement.x);
+						totalMovement += (Vector2.ClampMagnitude(lSlope, 1.0f) * moveSpeed);
+						Debug.Log(totalMovement + ", " + lSlope);
+						break;
+					}
+					else
 					{
-						totalMovement += (-Vector2.up * (collider.size.y / 2) * slopeRange * Time.fixedDeltaTime);
+						totalMovement += (Vector2.ClampMagnitude(lMovement, 1.0f) * moveSpeed);
 					}
 				}
 			}
