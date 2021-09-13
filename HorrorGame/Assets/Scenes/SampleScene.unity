@@ -571,7 +571,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpStrength: 10
   moveSpeed: 7
-  groundDistance: 0.77
+  groundDistance: 0.2
   maxSlope: 0.4
   gravity: 20
   totalMovement: {x: 0, y: 0}

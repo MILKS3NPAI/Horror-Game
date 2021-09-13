@@ -5,8 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Entity : MonoBehaviour
 {
+	//The velocity given when a character jumps.
 	[SerializeField]
 	float jumpStrength = 10f;
+	//How fast the character moves through the world.
 	[SerializeField]
 	float moveSpeed = 5f;
 	[SerializeField]
@@ -132,19 +134,6 @@ public class Entity : MonoBehaviour
 						Vector2 lSlope = new Vector2(lHit.normal.y * lMovement.x, lHit.normal.x * -lMovement.x);
 						totalMovement += (Vector2.ClampMagnitude(lSlope, 1.0f) * moveSpeed);
 						Debug.Log(totalMovement + ", " + lSlope);
-						/*
-						if (iMovement.x < 0 && lHit.normal.x < 0)
-						{
-							totalMovement += (-Vector2.up * collider.size.y * slopeRange * Time.fixedDeltaTime);
-						}
-						else if (iMovement.x > 0 && lHit.normal.x > 0)
-						{
-							totalMovement += (-Vector2.up * collider.size.y * slopeRange * Time.fixedDeltaTime);
-						}
-						else
-						{
-							totalMovement += (Vector2.up * collider.size.y * Time.fixedDeltaTime * Mathf.Abs(lMovement.x));
-						}*/
 						break;
 					}
 					else
