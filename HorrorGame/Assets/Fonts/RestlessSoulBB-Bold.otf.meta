@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 445079c1c93172d4fac05c26559e5e1c
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Restless Soul BB
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: e2cd82d4d6843ea418b5a2a784db83d2, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
