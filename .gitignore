@@ -1,4 +1,2 @@
-HorrorGame/Library
-HorrorGame/UserSettings
-*.dll
-*.xml
+
+HorrorGame/UserSettings/EditorUserSettings.asset
