@@ -5,7 +5,7 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     public static bool isPaused = false;
-    [SerializeField] GameObject pauseMenu;
+    [SerializeField] GameObject pauseMenu, soundMenu;
     void Update()
     {
         if (Input.GetKeyDown("p"))
@@ -34,7 +34,13 @@ public class PauseMenu : MonoBehaviour
     }
     public void SoundMenu()
     {
-        Debug.Log("Sound menu");
+        soundMenu.SetActive(true);
+        pauseMenu.SetActive(false);
+    }
+    public void MenuReturn()
+    {
+        soundMenu.SetActive(false);
+        pauseMenu.SetActive(true);
     }
     public void ExitGame()
     {
