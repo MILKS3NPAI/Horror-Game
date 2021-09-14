@@ -20,8 +20,8 @@ public class Entity : MonoBehaviour
 	float minDist = 9.86f;
 	[SerializeField]
 	protected Vector2 totalMovement = new Vector2();
-	float slopeRayLength = 10f;
-	float slopeRange = 50f;
+	[SerializeField]
+	float stepHeight = .5f;
 	[SerializeField]
 	Vector2 velocity = new Vector2();
 	Rigidbody2D body;
@@ -64,7 +64,8 @@ public class Entity : MonoBehaviour
 	{
 		if (Application.isPlaying)
 		{
-			Gizmos.DrawWireCube(mPosition + Vector2.down * groundDistance * -velocity.y * Time.fixedDeltaTime, collider.size * transform.localScale.y);
+			Gizmos.color = Color.blue;
+			Gizmos.DrawWireCube(collider.offset + mPosition + Vector2.down * groundDistance * -velocity.y * Time.fixedDeltaTime, new Vector3(collider.size.x, collider.size.y, 0) * transform.localScale.y);
 		}
 	}
 
@@ -83,14 +84,14 @@ public class Entity : MonoBehaviour
 		List<RaycastHit2D> lHits = new List<RaycastHit2D>();
 		groundDetected = false;
 		//Debug.Log("Boxcast " + mPosition2D + ". Distance: " + groundDistance * -velocity.y * Time.fixedDeltaTime);
-		if (Physics2D.BoxCast(mPosition2D, collider.size * transform.localScale.y, 0f, Vector2.down, mGroundFilter, lHits, groundDistance * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime) > 0)
+		if (Physics2D.BoxCast(mPosition2D + collider.offset, collider.size * transform.localScale.y, 0f, Vector2.down, mGroundFilter, lHits, groundDistance * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime) > 0)
 		{
 			foreach (RaycastHit2D lHit in lHits)
 			{
-				if (lHit.point.y <= (mPosition2D.y - (collider.size.y * transform.localScale.y * .5f)) && velocity.y <= 0 && Vector2.Dot(lHit.normal, Vector2.up) > maxSlope)
+				if (lHit.point.y + collider.offset.y <= (mPosition2D.y - (collider.size.y * transform.localScale.y * .5f)) && velocity.y <= 0 && Vector2.Dot(lHit.normal, Vector2.up) > maxSlope)
 				{
 					velocity.y = 0f;
-					body.MovePosition(lHits[0].point);
+					body.MovePosition(lHits[0].point + Vector2.up * (collider.size.y * transform.localScale.y));
 					groundDetected = true;
 					break;
 				}
@@ -125,12 +126,12 @@ public class Entity : MonoBehaviour
 		if (mGrounded)
 		{
 			//totalMovement += (Vector2.ClampMagnitude(lMovement, 1.0f) * moveSpeed);
-			if (Physics2D.BoxCast(mPosition2D, collider.size * transform.localScale.y, 0f, Vector2.down, mGroundFilter, lHits, groundDistance * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime) > 0 && iMovement.x != 0)
+			if (Physics2D.BoxCast(mPosition2D + collider.offset, collider.size * transform.localScale.y, 0f, Vector2.down, mGroundFilter, lHits, groundDistance * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime) > 0)
 			{
 				foreach (RaycastHit2D lHit in lHits)
 				{
-					if (lHit.point.y <= (mPosition2D.y - (collider.size.y * transform.localScale.y * .5f)) && velocity.y <= 0 && Vector2.Dot(lHit.normal, Vector2.up) > maxSlope)
-						{
+					if (lHit.point.y + collider.offset.y <= (mPosition2D.y - (collider.size.y * transform.localScale.y * .5f)) && velocity.y <= 0 && Vector2.Dot(lHit.normal, Vector2.up) > maxSlope)
+					{
 						Vector2 lSlope = new Vector2(lHit.normal.y * lMovement.x, lHit.normal.x * -lMovement.x);
 						totalMovement += (Vector2.ClampMagnitude(lSlope, 1.0f) * moveSpeed);
 						Debug.Log(totalMovement + ", " + lSlope);

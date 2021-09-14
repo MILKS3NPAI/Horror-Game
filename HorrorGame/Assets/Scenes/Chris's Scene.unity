@@ -187,10 +187,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4933646990205356874, guid: 5c0fd70d3045c084199177fc3e3f87c9, type: 3}
-      propertyPath: groundDistance
-      value: 0.86
-      objectReference: {fileID: 0}
     - target: {fileID: 4933646990205356876, guid: 5c0fd70d3045c084199177fc3e3f87c9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -234,6 +230,14 @@ PrefabInstance:
     - target: {fileID: 4933646990205356876, guid: 5c0fd70d3045c084199177fc3e3f87c9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4933646990205356878, guid: 5c0fd70d3045c084199177fc3e3f87c9, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.20939302
+      objectReference: {fileID: 0}
+    - target: {fileID: 4933646990205356878, guid: 5c0fd70d3045c084199177fc3e3f87c9, type: 3}
+      propertyPath: m_Size.y
+      value: 1.8376293
       objectReference: {fileID: 0}
     - target: {fileID: 4933646990205356879, guid: 5c0fd70d3045c084199177fc3e3f87c9, type: 3}
       propertyPath: m_Name
