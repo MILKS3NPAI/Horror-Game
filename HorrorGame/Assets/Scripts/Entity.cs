@@ -138,7 +138,7 @@ public class Entity : MonoBehaviour
 					}
 					else
 					{
-						totalMovement += (Vector2.ClampMagnitude(lMovement, 1.0f) * moveSpeed);
+						totalMovement += (Vector2.ClampMagnitude(lMovement, 1.0f) * moveSpeed * Time.fixedDeltaTime);
 					}
 				}
 			}
