@@ -134,7 +134,7 @@ public class Entity : MonoBehaviour
 					{
 						Vector2 lSlope = new Vector2(lHit.normal.y * lMovement.x, lHit.normal.x * -lMovement.x);
 						totalMovement += (Vector2.ClampMagnitude(lSlope, 1.0f) * moveSpeed);
-						Debug.Log(totalMovement + ", " + lSlope);
+						//Debug.Log(totalMovement + ", " + lSlope);
 						break;
 					}
 					else
