@@ -6,19 +6,33 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool isPaused = false;
     [SerializeField] GameObject pauseMenu, soundMenu;
+    PlayerControls playerControls;
+
+    //Initialize the PlayerControls Map to use 
+    protected  void Awake()
+    {
+        playerControls = new PlayerControls();
+    }
+    //This just detects when Pause is pressed in the map(PlayerControls.UI) (Currently:P)
+    private void Start()
+    {
+        // += _ means blank, some inputs can return a value, you would do   += var => Function(var);
+        playerControls.UI.Pause.performed += _ => Pause();
+    }
+    //OnEnable and disbale are required in any script using an InputMap
+    private void OnEnable()
+    {
+        playerControls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        playerControls.Disable();
+    }
+
     void Update()
     {
-        if (Input.GetKeyDown("p"))
-        {
-            if (isPaused)
-            {
-                ResumeGame();
-            }
-            else
-            {
-                PauseGame();
-            }
-        }
+        //Don't need to check in update because the PlayerControls map auto does that
     }
     public void ResumeGame()
     {
@@ -45,5 +59,18 @@ public class PauseMenu : MonoBehaviour
     public void ExitGame()
     {
         Debug.Log("You quit");
+    }
+
+    //Rename however you want
+    public void Pause()
+    {
+        if (isPaused)
+        {
+            ResumeGame();
+        }
+        else
+        {
+            PauseGame();
+        }
     }
 }
