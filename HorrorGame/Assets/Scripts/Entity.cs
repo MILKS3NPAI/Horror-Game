@@ -81,7 +81,7 @@ public class Entity : MonoBehaviour
 		if (mGrounded)
 		{
 			velocity.y = jumpStrength;
-			Time.timeScale -= .1f;
+			//Time.timeScale -= .1f;
 		}
 	}
 
