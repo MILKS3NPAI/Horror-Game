@@ -29,63 +29,29 @@ public class Player : Entity
     {
         playerControls.Disable();
     }
-
     
-
     protected override void FixedUpdate()
 	{
 
-        totalMovement = Vector2.zero;
-        Vector2 lMovement = new Vector2();
-
+        //physicsMovement = Vector2.zero;
+        Vector2 lMovement = new Vector2(direction, 0);
+        /*
         if (direction == 1)
         {
-            Debug.Log("movement right");
+            //Debug.Log("movement right");
             lMovement.x = 1f;
         }
         else if (direction == -1)
         {
             lMovement.x = -1f;
-        }
+        }*/
 
         MoveRelative(lMovement.normalized);
-
-
-
         base.FixedUpdate();
-
-        
-        /*
-		totalMovement = Vector2.zero;
-		Vector2 lMovement = new Vector2();
-        
-		if (Input.GetKey(KeyCode.F))
-		{
-			lMovement.x = 1f;
-		}
-		else if (Input.GetKey(KeyCode.S))
-		{
-			lMovement.x = -1f;
-		}
-		if (Input.GetKey(KeyCode.E))
-		{
-			lMovement.y = 1f;
-		}
-		else if (Input.GetKey(KeyCode.D))
-		{
-			lMovement.y = -1f;
-		}
-
-		MoveRelative(lMovement.normalized);
-		base.FixedUpdate();
-
-        */
-        //RunPhysicsStep();
-        //body.MovePosition(body.position + (totalMovement * Time.fixedDeltaTime));
     }
 
-    private void Move(float d )
+    private void Move(float iDirection )
     {
-        direction = d;
+        direction = iDirection;
     }
 }

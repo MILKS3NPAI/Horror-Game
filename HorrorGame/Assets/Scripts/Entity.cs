@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Entity : MonoBehaviour
@@ -19,7 +20,13 @@ public class Entity : MonoBehaviour
 	float gravity = 9.86f;
 	float minDist = 9.86f;
 	[SerializeField]
-	protected Vector2 totalMovement = new Vector2();
+	protected Vector2 previousPhysicsMovement = new Vector2();
+	[SerializeField]
+	protected Vector2 previousPlayerMovement = new Vector2();
+	protected Vector2 physicsMovement = new Vector2();
+	protected Vector2 playerMovement = new Vector2();
+	[SerializeField]
+	float groundRayDistance = 1.25f;
 	[SerializeField]
 	float stepHeight = .5f;
 	[SerializeField]
@@ -28,10 +35,25 @@ public class Entity : MonoBehaviour
 	new protected BoxCollider2D collider;
 	[SerializeField]
 	bool groundDetected = false;
+	protected List<RaycastHit2D> recentFloorHits = new List<RaycastHit2D>();
+	protected int floorAction = 0;
+	UnityAction[] physicsActions;
+	UnityAction<Vector2>[] moveActions;
 	ContactFilter2D mGroundFilter { get { return ConstantResources.sGroundMask; } }
 	public Vector2 mPosition2D { get { return new Vector2(transform.position.x, transform.position.y); } }
 	public Vector2 mPosition { get { return transform.position; } }
 	bool mGrounded { get { return groundDetected && (velocity.y <= 0); } }
+	public Vector2 mGroundDetectionOrigin { get { return mPosition2D + collider.offset + (Vector2.up * stepHeight); } }
+	public Vector2 mGroundDetectionBoxDimensions { get { return collider.size * transform.localScale.y; } }
+	public float mGroundDetectionDistance { get { return (groundDistance) * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime + stepHeight; } }
+	public Vector2 mGroundDetectionPoint { get; protected set; }
+	public Vector2 mGroundDetectionUnderfootPoint
+	{
+		get
+		{
+			return new Vector2((mPosition2D + collider.offset).x, mGroundDetectionPoint.y + groundDistance);
+		}
+	}
 
 	protected virtual void Awake()
 	{
@@ -45,6 +67,8 @@ public class Entity : MonoBehaviour
 			Debug.LogError("Rigidbody not able to be acquired and not set. Was it not enabled in the scene?", gameObject);
 		}
 		collider = GetComponent<BoxCollider2D>();
+		physicsActions = new UnityAction[] { FloorMissAction, FloorHitAction };
+		moveActions = new UnityAction<Vector2>[] { MoveThroughAir, MoveAlongFloor };
 	}
 
 	protected virtual void Start()
@@ -57,6 +81,7 @@ public class Entity : MonoBehaviour
 		if (mGrounded)
 		{
 			velocity.y = jumpStrength;
+			Time.timeScale -= .1f;
 		}
 	}
 
@@ -65,7 +90,18 @@ public class Entity : MonoBehaviour
 		if (Application.isPlaying)
 		{
 			Gizmos.color = Color.blue;
-			Gizmos.DrawWireCube(collider.offset + mPosition + Vector2.down * groundDistance * -velocity.y * Time.fixedDeltaTime, new Vector3(collider.size.x, collider.size.y, 0) * transform.localScale.y);
+			Gizmos.DrawWireCube(mGroundDetectionOrigin + Vector2.down * mGroundDetectionDistance, new Vector3(mGroundDetectionBoxDimensions.x,
+				mGroundDetectionBoxDimensions.y, 0));
+			Gizmos.DrawLine(mGroundDetectionOrigin, mGroundDetectionOrigin + Vector2.down * (mGroundDetectionDistance +
+				(mGroundDetectionBoxDimensions.y * .5f)));
+			if (recentFloorHits.Count > 0)
+			{
+				Gizmos.DrawWireSphere(recentFloorHits[0].point, .4f);
+			}
+			Gizmos.color = Color.red;
+			Gizmos.DrawLine(transform.position, transform.position + new Vector3(previousPhysicsMovement.x + previousPlayerMovement.x,
+				previousPlayerMovement.y + previousPhysicsMovement.y, 0) * 4f * Time.fixedDeltaTime);
+			//Gizmos.DrawLine(mPosition2D + (Vector2.down * collider.size.y / 2), mPosition2D + Vector2.down * groundDistance * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime);
 		}
 	}
 
@@ -79,36 +115,86 @@ public class Entity : MonoBehaviour
 		Debug.Log("Collision: " + iOther);
 	}
 
-	protected virtual void RunPhysicsStep()
+	protected unsafe virtual void DetectFloor()
 	{
-		List<RaycastHit2D> lHits = new List<RaycastHit2D>();
-		groundDetected = false;
-		//Debug.Log("Boxcast " + mPosition2D + ". Distance: " + groundDistance * -velocity.y * Time.fixedDeltaTime);
-		if (Physics2D.BoxCast(mPosition2D + collider.offset, collider.size * transform.localScale.y, 0f, Vector2.down, mGroundFilter, lHits, groundDistance * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime) > 0)
+		//bool lFloorDetection = groundDetected = (Physics2D.Raycast(mGroundDetectionOrigin, Vector2.down, mGroundFilter, recentFloorHits, mGroundDetectionDistance + (mGroundDetectionBoxDimensions.y * .5f)) > 0 || Physics2D.BoxCast(mGroundDetectionOrigin, mGroundDetectionBoxDimensions, 0f, Vector2.down, mGroundFilter, recentFloorHits, mGroundDetectionDistance + stepHeight) > 0) && velocity.y <= 0;
+		//bool lFloorDetection = groundDetected = Physics2D.BoxCast(mGroundDetectionOrigin, mGroundDetectionBoxDimensions, 0f, Vector2.down,
+		//	mGroundFilter, recentFloorHits, mGroundDetectionDistance) > 0 && velocity.y <= 0;
+		bool lFloorDetection = groundDetected = (Physics2D.BoxCast(mGroundDetectionOrigin, mGroundDetectionBoxDimensions, 0f, Vector2.down,
+			mGroundFilter, recentFloorHits, mGroundDetectionDistance) > 0 || (velocity.y == 0 && Physics2D.Raycast(mGroundDetectionOrigin,
+			Vector2.down, mGroundFilter, recentFloorHits, mGroundDetectionDistance + groundRayDistance) > 0)) && velocity.y <= 0;
+		floorAction = (*(byte*)&lFloorDetection & 0x0001b);
+	}
+
+	void FloorHitAction()
+	{
+		foreach (RaycastHit2D lHit in recentFloorHits)
 		{
-			foreach (RaycastHit2D lHit in lHits)
+			//if (lHit.point.y - stepHeight <= (mGroundDetectionOrigin.y - (mGroundDetectionBoxDimensions.y * .5f)))
+			if (lHit.point.y <= (mGroundDetectionOrigin.y - (mGroundDetectionBoxDimensions.y * .5f)))
 			{
-				if (lHit.point.y + collider.offset.y <= (mPosition2D.y - (collider.size.y * transform.localScale.y * .5f)) && velocity.y <= 0 && Vector2.Dot(lHit.normal, Vector2.up) > maxSlope)
+				mGroundDetectionPoint = lHit.point;
+				Vector2 lSlope = new Vector2(lHit.normal.y * playerMovement.x, lHit.normal.x * -playerMovement.x);
+				playerMovement = (Vector2.ClampMagnitude(lSlope, 1.0f) * moveSpeed);
+				body.MovePosition(mGroundDetectionUnderfootPoint + ((playerMovement + physicsMovement) * Time.fixedDeltaTime) +
+					(Vector2.up * mGroundDetectionBoxDimensions.y * .5f));// + (totalMovement * Time.fixedDeltaTime));
+																		  //body.MovePosition(mGroundDetectionUnderfootPoint + ((playerMovement + physicsMovement) * Time.fixedDeltaTime) + (Vector2.up * mGroundDetectionBoxDimensions.y * .5f));// + (totalMovement * Time.fixedDeltaTime));
+				if (Vector2.Dot(lHit.normal, Vector2.up) > maxSlope)
 				{
-					velocity.y = 0f;
-					body.MovePosition(lHits[0].point + Vector2.up * (collider.size.y * transform.localScale.y));
+					velocity = Vector2.zero;
 					groundDetected = true;
-					break;
+					return;
 				}
 			}
 		}
-		if (!groundDetected)
-		{
-			velocity.y -= gravity * Time.fixedDeltaTime;
-		}
-		totalMovement += velocity;
+		body.MovePosition(body.position + ((playerMovement + physicsMovement) * Time.fixedDeltaTime));
+	}
+
+	void FloorMissAction()
+	{
+		velocity.y -= gravity * Time.fixedDeltaTime;
+		physicsMovement += velocity;
+		body.MovePosition(body.position + ((playerMovement + physicsMovement) * Time.fixedDeltaTime));
+	}
+
+	protected virtual void RunPhysicsStep()
+	{
+
+		groundDetected = false;
+		DetectFloor();
+		physicsActions[floorAction].Invoke();
 	}
 
 	protected virtual void FixedUpdate()
 	{
 		RunPhysicsStep();
-		body.MovePosition(body.position + (totalMovement * Time.fixedDeltaTime));
-		totalMovement = Vector2.zero;
+		previousPhysicsMovement = physicsMovement;
+		previousPlayerMovement = playerMovement;
+		physicsMovement = Vector2.zero;
+		playerMovement = Vector2.zero;
+	}
+
+	void MoveAlongFloor(Vector2 iMovement)
+	{
+		foreach (RaycastHit2D lHit in recentFloorHits)
+		{
+			if (lHit.point.y - groundRayDistance <= (mGroundDetectionOrigin.y - mGroundDetectionBoxDimensions.y * .5f) && Vector2.Dot(lHit.normal, Vector2.up) > maxSlope)
+			{
+				//Vector2 lSlope = new Vector2(lHit.normal.y * iMovement.x, lHit.normal.x * -iMovement.x);
+				//playerMovement = (Vector2.ClampMagnitude(lSlope, 1.0f) * moveSpeed);
+				playerMovement = (Vector2.ClampMagnitude(iMovement, 1.0f) * moveSpeed);// * Time.fixedDeltaTime);
+				return;
+			}
+			else
+			{
+				playerMovement = (Vector2.ClampMagnitude(iMovement, 1.0f) * moveSpeed * Time.fixedDeltaTime);
+			}
+		}
+	}
+
+	void MoveThroughAir(Vector2 iMovement)
+	{
+		playerMovement = (Vector2.ClampMagnitude(iMovement, 1.0f) * moveSpeed);
 	}
 
 	public void MoveRelative(Vector2 iMovement)
@@ -122,31 +208,6 @@ public class Entity : MonoBehaviour
 		{
 			Jump();
 		}
-		List<RaycastHit2D> lHits = new List<RaycastHit2D>();
-		if (mGrounded)
-		{
-			//totalMovement += (Vector2.ClampMagnitude(lMovement, 1.0f) * moveSpeed);
-			if (Physics2D.BoxCast(mPosition2D + collider.offset, collider.size * transform.localScale.y, 0f, Vector2.down, mGroundFilter, lHits, groundDistance * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime) > 0)
-			{
-				foreach (RaycastHit2D lHit in lHits)
-				{
-					if (lHit.point.y + collider.offset.y <= (mPosition2D.y - (collider.size.y * transform.localScale.y * .5f)) && velocity.y <= 0 && Vector2.Dot(lHit.normal, Vector2.up) > maxSlope)
-					{
-						Vector2 lSlope = new Vector2(lHit.normal.y * lMovement.x, lHit.normal.x * -lMovement.x);
-						totalMovement += (Vector2.ClampMagnitude(lSlope, 1.0f) * moveSpeed);
-						//Debug.Log(totalMovement + ", " + lSlope);
-						break;
-					}
-					else
-					{
-						totalMovement += (Vector2.ClampMagnitude(lMovement, 1.0f) * moveSpeed * Time.fixedDeltaTime);
-					}
-				}
-			}
-		}
-		else
-		{
-			totalMovement += (Vector2.ClampMagnitude(lMovement, 1.0f) * moveSpeed);
-		}
+		moveActions[floorAction].Invoke(lMovement);
 	}
 }
