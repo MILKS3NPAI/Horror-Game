@@ -4,38 +4,40 @@ using UnityEngine;
 
 public class Player : Entity
 {
-    private PlayerControls playerControls;
-    float direction;
-    protected override void Awake()
-    
-    {
-        base.Awake();
-        playerControls = new PlayerControls();
-        mGroundFilter = ConstantResources.sPlayerGroundMask;
-    }
+	private PlayerControls playerControls;
+	float direction;
+	[SerializeField] bool _hidden = false;
+	public bool mHidden { get { return _hidden; } set { if (_hidden == value) return; collider.isTrigger = value; physicsEnabled = !value; } }
 
-    protected override void Start()
-    {
-        playerControls._2Dmovement.Jump.performed += _ => Jump();
-        playerControls._2Dmovement.Move.performed += cxt => Move(cxt.ReadValue<float>());
-    }
+	protected override void Awake()
+	{
+		base.Awake();
+		playerControls = new PlayerControls();
+		mGroundFilter = ConstantResources.sPlayerGroundMask;
+	}
 
-    private void OnEnable()
-    {
-        playerControls.Enable();
-    }
+	protected override void Start()
+	{
+		playerControls._2Dmovement.Jump.performed += _ => Jump();
+		playerControls._2Dmovement.Move.performed += cxt => Move(cxt.ReadValue<float>());
+	}
 
-    private void OnDisable()
-    {
-        playerControls.Disable();
-    }
-    
-    protected override void FixedUpdate()
+	private void OnEnable()
+	{
+		playerControls.Enable();
+	}
+
+	private void OnDisable()
+	{
+		playerControls.Disable();
+	}
+
+	protected override void FixedUpdate()
 	{
 
-        //physicsMovement = Vector2.zero;
-        Vector2 lMovement = new Vector2(direction, 0);
-        /*
+		//physicsMovement = Vector2.zero;
+		Vector2 lMovement = new Vector2(direction, 0);
+		/*
         if (direction == 1)
         {
             //Debug.Log("movement right");
@@ -46,12 +48,12 @@ public class Player : Entity
             lMovement.x = -1f;
         }*/
 
-        MoveRelative(lMovement.normalized);
-        base.FixedUpdate();
-    }
+		MoveRelative(lMovement.normalized);
+		base.FixedUpdate();
+	}
 
-    private void Move(float iDirection )
-    {
-        direction = iDirection;
-    }
+	private void Move(float iDirection)
+	{
+		direction = iDirection;
+	}
 }

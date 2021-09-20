@@ -46,9 +46,8 @@ public class ComplexTraversal : MonoBehaviour
 			}
 		}
 		currentTarget = 0;
-		if (iEntity is Enemy)
+		if (iEntity is Enemy lEnemy)
 		{
-			Enemy lEnemy = (Enemy)iEntity;
 			previousState = lEnemy.mAIState;
 			lEnemy.mAIState = AIState.COMPLEX_TRAVERSAL;
 			Debug.Log("Previous state: " + previousState);
@@ -74,7 +73,7 @@ public class ComplexTraversal : MonoBehaviour
 		}
 		else
 		{
-			iEntity.MoveAbsolute(Vector2.ClampMagnitude((currentTargetPosition - iEntity.mPosition2D), 1.0f) * iEntity.mMoveSpeed * movementRate);
+			iEntity.MoveAbsolute(iEntity.mMoveSpeed * movementRate * Vector2.ClampMagnitude((currentTargetPosition - iEntity.mPosition2D), 1.0f));
 		}
 	}
 
@@ -87,9 +86,8 @@ public class ComplexTraversal : MonoBehaviour
 				return;
 			}
 		}
-		if (iEntity is Enemy)
+		if (iEntity is Enemy lEnemy)
 		{
-			Enemy lEnemy = (Enemy)iEntity;
 			lEnemy.mAIState = previousState;
 			Debug.Log("Setting " + lEnemy + " to state " + previousState);
 			lEnemy.physicsEnabled = true;
