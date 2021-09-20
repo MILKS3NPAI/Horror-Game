@@ -23,7 +23,7 @@ public class ComplexTraversal : MonoBehaviour
 		try
 		{
 			Entity lEntity = iOther.GetComponent<Entity>();
-			Debug.Log("Trigger enter: " + lEntity);
+			//Debug.Log("Trigger enter: " + lEntity);
 			BeginTraversal(lEntity);
 		}
 		catch (Exception)
@@ -50,7 +50,7 @@ public class ComplexTraversal : MonoBehaviour
 		{
 			previousState = lEnemy.mAIState;
 			lEnemy.mAIState = AIState.COMPLEX_TRAVERSAL;
-			Debug.Log("Previous state: " + previousState);
+			//Debug.Log("Previous state: " + previousState);
 			lEnemy.physicsEnabled = false;
 			currentTargetPosition = new Vector2(traversalPoints[0].position.x, traversalPoints[0].position.y);
 			lEnemy.traversal = this;
@@ -89,7 +89,7 @@ public class ComplexTraversal : MonoBehaviour
 		if (iEntity is Enemy lEnemy)
 		{
 			lEnemy.mAIState = previousState;
-			Debug.Log("Setting " + lEnemy + " to state " + previousState);
+			//Debug.Log("Setting " + lEnemy + " to state " + previousState);
 			lEnemy.physicsEnabled = true;
 		}
 		if (temporarilyDisablesCollision)
