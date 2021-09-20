@@ -337,7 +337,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 167070189}
   m_LocalRotation: {x: 0, y: 0, z: 0.07959004, w: 0.9968277}
-  m_LocalPosition: {x: 7.81, y: -2.46, z: -0.4272658}
+  m_LocalPosition: {x: 10.27, y: -3.39, z: -0.4272658}
   m_LocalScale: {x: 100, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2104,12 +2104,24 @@ MonoBehaviour:
   sounds:
   - clip: {fileID: 8300000, guid: 1211d890f53e60a4181245f8d72b8887, type: 3}
     source: {fileID: 0}
-    volume: 1
+    canLoop: 1
+    volume: 0.3
     name: Music1
   - clip: {fileID: 8300000, guid: af55b640179b087468134fb0abefc9b6, type: 3}
     source: {fileID: 0}
-    volume: 1
+    canLoop: 1
+    volume: 0.3
     name: Music2
+  - clip: {fileID: 8300000, guid: 6c67a50a43aaff94a807ad2816e367e7, type: 3}
+    source: {fileID: 0}
+    canLoop: 1
+    volume: 1
+    name: Step1
+  - clip: {fileID: 8300000, guid: 8471518388fd93f4b944f80f309b2ed2, type: 3}
+    source: {fileID: 0}
+    canLoop: 0
+    volume: 1
+    name: Step2
 --- !u!1 &1637285545
 GameObject:
   m_ObjectHideFlags: 0
@@ -2565,7 +2577,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1706557733}
   m_LocalRotation: {x: 0, y: 0, z: -0.3668259, w: 0.9302896}
-  m_LocalPosition: {x: -9.51, y: -2.46, z: -0.4272658}
+  m_LocalPosition: {x: -13.83, y: -0.04, z: -0.4272658}
   m_LocalScale: {x: 100, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
