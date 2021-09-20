@@ -11,13 +11,13 @@ public class Player : Entity
     {
         base.Awake();
         playerControls = new PlayerControls();
+        mGroundFilter = ConstantResources.sPlayerGroundMask;
     }
 
     protected override void Start()
     {
         playerControls._2Dmovement.Jump.performed += _ => Jump();
         playerControls._2Dmovement.Move.performed += cxt => Move(cxt.ReadValue<float>());
-
     }
 
     private void OnEnable()

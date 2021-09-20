@@ -22,9 +22,9 @@ public class Entity : MonoBehaviour
 	[SerializeField]
 	protected Vector2 previousPhysicsMovement = new Vector2();
 	[SerializeField]
-	protected Vector2 previousPlayerMovement = new Vector2();
+	protected Vector2 previousEntityMovement = new Vector2();
 	protected Vector2 physicsMovement = new Vector2();
-	protected Vector2 playerMovement = new Vector2();
+	protected Vector2 entityMovement = new Vector2();
 	[SerializeField]
 	float groundRayDistance = 1.25f;
 	[SerializeField]
@@ -39,7 +39,8 @@ public class Entity : MonoBehaviour
 	protected int floorAction = 0;
 	UnityAction[] physicsActions;
 	UnityAction<Vector2>[] moveActions;
-	ContactFilter2D mGroundFilter { get { return ConstantResources.sGroundMask; } }
+	public bool physicsEnabled = true;
+	public ContactFilter2D mGroundFilter { get; protected set; }
 	public Vector2 mPosition2D { get { return new Vector2(transform.position.x, transform.position.y); } }
 	public Vector2 mPosition { get { return transform.position; } }
 	bool mGrounded { get { return groundDetected && (velocity.y <= 0); } }
@@ -47,13 +48,8 @@ public class Entity : MonoBehaviour
 	public Vector2 mGroundDetectionBoxDimensions { get { return collider.size * transform.localScale.y; } }
 	public float mGroundDetectionDistance { get { return (groundDistance) * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime + stepHeight; } }
 	public Vector2 mGroundDetectionPoint { get; protected set; }
-	public Vector2 mGroundDetectionUnderfootPoint
-	{
-		get
-		{
-			return new Vector2((mPosition2D + collider.offset).x, mGroundDetectionPoint.y + groundDistance);
-		}
-	}
+	public Vector2 mGroundDetectionUnderfootPoint { get { return new Vector2((mPosition2D + collider.offset).x, mGroundDetectionPoint.y + groundDistance); } }
+	public float mMoveSpeed { get { return moveSpeed; } }
 
 	protected virtual void Awake()
 	{
@@ -69,6 +65,7 @@ public class Entity : MonoBehaviour
 		collider = GetComponent<BoxCollider2D>();
 		physicsActions = new UnityAction[] { FloorMissAction, FloorHitAction };
 		moveActions = new UnityAction<Vector2>[] { MoveThroughAir, MoveAlongFloor };
+		mGroundFilter = ConstantResources.sGroundMask;
 	}
 
 	protected virtual void Start()
@@ -99,8 +96,8 @@ public class Entity : MonoBehaviour
 				Gizmos.DrawWireSphere(recentFloorHits[0].point, .4f);
 			}
 			Gizmos.color = Color.red;
-			Gizmos.DrawLine(transform.position, transform.position + new Vector3(previousPhysicsMovement.x + previousPlayerMovement.x,
-				previousPlayerMovement.y + previousPhysicsMovement.y, 0) * 4f * Time.fixedDeltaTime);
+			Gizmos.DrawLine(transform.position, transform.position + new Vector3(previousPhysicsMovement.x + previousEntityMovement.x,
+				previousEntityMovement.y + previousPhysicsMovement.y, 0) * 4f * Time.fixedDeltaTime);
 			//Gizmos.DrawLine(mPosition2D + (Vector2.down * collider.size.y / 2), mPosition2D + Vector2.down * groundDistance * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime);
 		}
 	}
@@ -120,9 +117,9 @@ public class Entity : MonoBehaviour
 		//bool lFloorDetection = groundDetected = (Physics2D.Raycast(mGroundDetectionOrigin, Vector2.down, mGroundFilter, recentFloorHits, mGroundDetectionDistance + (mGroundDetectionBoxDimensions.y * .5f)) > 0 || Physics2D.BoxCast(mGroundDetectionOrigin, mGroundDetectionBoxDimensions, 0f, Vector2.down, mGroundFilter, recentFloorHits, mGroundDetectionDistance + stepHeight) > 0) && velocity.y <= 0;
 		//bool lFloorDetection = groundDetected = Physics2D.BoxCast(mGroundDetectionOrigin, mGroundDetectionBoxDimensions, 0f, Vector2.down,
 		//	mGroundFilter, recentFloorHits, mGroundDetectionDistance) > 0 && velocity.y <= 0;
-		bool lFloorDetection = groundDetected = (Physics2D.BoxCast(mGroundDetectionOrigin, mGroundDetectionBoxDimensions, 0f, Vector2.down,
+		bool lFloorDetection = groundDetected = physicsEnabled && ((Physics2D.BoxCast(mGroundDetectionOrigin, mGroundDetectionBoxDimensions, 0f, Vector2.down,
 			mGroundFilter, recentFloorHits, mGroundDetectionDistance) > 0 || (velocity.y == 0 && Physics2D.Raycast(mGroundDetectionOrigin,
-			Vector2.down, mGroundFilter, recentFloorHits, mGroundDetectionDistance + groundRayDistance) > 0)) && velocity.y <= 0;
+			Vector2.down, mGroundFilter, recentFloorHits, mGroundDetectionDistance + groundRayDistance) > 0)) && velocity.y <= 0);
 		floorAction = (*(byte*)&lFloorDetection & 0x0001b);
 	}
 
@@ -134,9 +131,9 @@ public class Entity : MonoBehaviour
 			if (lHit.point.y <= (mGroundDetectionOrigin.y - (mGroundDetectionBoxDimensions.y * .5f)))
 			{
 				mGroundDetectionPoint = lHit.point;
-				Vector2 lSlope = new Vector2(lHit.normal.y * playerMovement.x, lHit.normal.x * -playerMovement.x);
-				playerMovement = (Vector2.ClampMagnitude(lSlope, 1.0f) * moveSpeed);
-				body.MovePosition(mGroundDetectionUnderfootPoint + ((playerMovement + physicsMovement) * Time.fixedDeltaTime) +
+				Vector2 lSlope = new Vector2(lHit.normal.y * entityMovement.x, lHit.normal.x * -entityMovement.x);
+				entityMovement = (Vector2.ClampMagnitude(lSlope, 1.0f) * moveSpeed);
+				body.MovePosition(mGroundDetectionUnderfootPoint + ((entityMovement + physicsMovement) * Time.fixedDeltaTime) +
 					(Vector2.up * mGroundDetectionBoxDimensions.y * .5f));// + (totalMovement * Time.fixedDeltaTime));
 																		  //body.MovePosition(mGroundDetectionUnderfootPoint + ((playerMovement + physicsMovement) * Time.fixedDeltaTime) + (Vector2.up * mGroundDetectionBoxDimensions.y * .5f));// + (totalMovement * Time.fixedDeltaTime));
 				if (Vector2.Dot(lHit.normal, Vector2.up) > maxSlope)
@@ -147,19 +144,24 @@ public class Entity : MonoBehaviour
 				}
 			}
 		}
-		body.MovePosition(body.position + ((playerMovement + physicsMovement) * Time.fixedDeltaTime));
+		body.MovePosition(body.position + ((entityMovement + physicsMovement) * Time.fixedDeltaTime));
 	}
 
 	void FloorMissAction()
 	{
 		velocity.y -= gravity * Time.fixedDeltaTime;
 		physicsMovement += velocity;
-		body.MovePosition(body.position + ((playerMovement + physicsMovement) * Time.fixedDeltaTime));
+		body.MovePosition(body.position + ((entityMovement + physicsMovement) * Time.fixedDeltaTime));
 	}
 
 	protected virtual void RunPhysicsStep()
 	{
-
+		if (!physicsEnabled)
+		{
+			velocity = Vector2.zero;
+			body.MovePosition(body.position + ((entityMovement) * Time.fixedDeltaTime));
+			return;
+		}
 		groundDetected = false;
 		DetectFloor();
 		physicsActions[floorAction].Invoke();
@@ -169,9 +171,9 @@ public class Entity : MonoBehaviour
 	{
 		RunPhysicsStep();
 		previousPhysicsMovement = physicsMovement;
-		previousPlayerMovement = playerMovement;
+		previousEntityMovement = entityMovement;
 		physicsMovement = Vector2.zero;
-		playerMovement = Vector2.zero;
+		entityMovement = Vector2.zero;
 	}
 
 	void MoveAlongFloor(Vector2 iMovement)
@@ -182,19 +184,19 @@ public class Entity : MonoBehaviour
 			{
 				//Vector2 lSlope = new Vector2(lHit.normal.y * iMovement.x, lHit.normal.x * -iMovement.x);
 				//playerMovement = (Vector2.ClampMagnitude(lSlope, 1.0f) * moveSpeed);
-				playerMovement = (Vector2.ClampMagnitude(iMovement, 1.0f) * moveSpeed);// * Time.fixedDeltaTime);
+				entityMovement = (Vector2.ClampMagnitude(iMovement, 1.0f) * moveSpeed);// * Time.fixedDeltaTime);
 				return;
 			}
 			else
 			{
-				playerMovement = (Vector2.ClampMagnitude(iMovement, 1.0f) * moveSpeed * Time.fixedDeltaTime);
+				entityMovement = (Vector2.ClampMagnitude(iMovement, 1.0f) * moveSpeed * Time.fixedDeltaTime);
 			}
 		}
 	}
 
 	void MoveThroughAir(Vector2 iMovement)
 	{
-		playerMovement = (Vector2.ClampMagnitude(iMovement, 1.0f) * moveSpeed);
+		entityMovement = (Vector2.ClampMagnitude(iMovement, 1.0f) * moveSpeed);
 	}
 
 	public void MoveRelative(Vector2 iMovement)
@@ -209,5 +211,10 @@ public class Entity : MonoBehaviour
 			Jump();
 		}
 		moveActions[floorAction].Invoke(lMovement);
+	}
+
+	public void MoveAbsolute(Vector2 iMovement)
+	{
+		entityMovement = iMovement;
 	}
 }
