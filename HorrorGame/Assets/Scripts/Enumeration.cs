@@ -8,10 +8,16 @@ using UnityEngine;
 public class ConstantResources
 {
 	public static ContactFilter2D sGroundMask = new ContactFilter2D();
+	public static ContactFilter2D sPlayerGroundMask = new ContactFilter2D();
+	public static ContactFilter2D sEnemyGroundMask = new ContactFilter2D();
 	public static void Initialize()
 	{
 		sGroundMask.layerMask = LayerMask.GetMask("Terrain");
+		sPlayerGroundMask.layerMask = LayerMask.GetMask("Terrain", "Enemy");
+		sEnemyGroundMask.layerMask = LayerMask.GetMask("Terrain", "Player");
 		sGroundMask.useLayerMask = true;
+		sPlayerGroundMask.useLayerMask = true;
+		sEnemyGroundMask.useLayerMask = true;
 	}
 	public static Array EnumArray<T>()
 	{
@@ -51,7 +57,7 @@ public enum StimulusType
 
 public enum AIState
 {
-	INACTIVE, IDLE, PATROL, CHASE, SEARCH, SCRIPTED
+	INACTIVE, IDLE, PATROL, CHASE, COMPLEX_TRAVERSAL, SEARCH, SCRIPTED
 }
 
 public enum StateEvent {

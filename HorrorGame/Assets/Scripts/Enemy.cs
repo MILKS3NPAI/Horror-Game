@@ -16,7 +16,12 @@ public class Enemy : Entity
 	[SerializeField]
 	private AIState _aiState;
 	public AIState mPreviousAIState { get; private set; }
-	public AIState mAIState { get { return _aiState; } private set { mPreviousAIState = _aiState; stateExits[(int)_aiState].Invoke(); _aiState = value; stateEnters[(int)_aiState].Invoke(); } }
+	public AIState mAIState { get { return _aiState; } set { if (value == _aiState) return; mPreviousAIState = _aiState; stateExits[(int)_aiState].Invoke(); _aiState = value; stateEnters[(int)_aiState].Invoke(); } }
+	public Transform[] patrolPoints = new Transform[0];
+	int patrolDir = 1;
+	int patrolTarget = 0;
+	Vector2 moveTarget = new Vector2();
+	public ComplexTraversal traversal;
 
 	protected override void Awake()
 	{
@@ -28,6 +33,10 @@ public class Enemy : Entity
 			stateFixeds[i] = DoNothing;
 			stateExits[i] = DoNothing;
 		}
+		stateFixeds[(int)AIState.PATROL] = PatrolFixed;
+		stateFixeds[(int)AIState.CHASE] = ChaseFixed;
+		stateFixeds[(int)AIState.COMPLEX_TRAVERSAL] = TraverseFixed;
+		mGroundFilter = ConstantResources.sEnemyGroundMask;
 	}
 
 	void DoNothing()
@@ -48,11 +57,45 @@ public class Enemy : Entity
 
 	public void ReceiveStimulus(Stimulus iStimulus)
 	{
-		stimuli.Add(iStimulus);
-		stimuli.Sort();
-		if (stimuli.Count > maxStimuli)
+		iStimulus.receiverLocation = mPosition2D;
+		if (CanDetectStimulus(iStimulus))
 		{
-			stimuli.RemoveAt(maxStimuli);
+			stimuli.Add(iStimulus);
+			stimuli.Sort();
+			if (stimuli.Count > maxStimuli)
+			{
+				stimuli.RemoveAt(maxStimuli);
+			}
+			alertnessLevel += iStimulus.mValue;
 		}
 	}
+
+	public bool CanDetectStimulus(Stimulus iStimulus)
+	{
+		return iStimulus.range < Vector2.Distance(iStimulus.sourceLocation, iStimulus.receiverLocation);
+	}
+
+	void ChaseFixed()
+	{
+		MoveRelative(new Vector2(stimuli[0].sourceLocation.x - mPosition2D.x, 0));
+	}
+
+	void PatrolFixed()
+	{
+		moveTarget = new Vector2(patrolPoints[patrolTarget].position.x, patrolPoints[patrolTarget].position.y);
+		if (Mathf.Abs(moveTarget.x - mPosition2D.x) < mMoveSpeed * Time.fixedDeltaTime){
+			patrolTarget += patrolDir;
+			if (patrolTarget >= patrolPoints.Length - 1 || patrolTarget == 0)
+			{
+				patrolDir *= -1;
+			}
+		}
+		MoveRelative(new Vector2(patrolPoints[patrolTarget].position.x - mPosition.x, 0));
+	}
+
+	void TraverseFixed()
+	{
+		traversal.Traverse(this);
+	}
+
 }
