@@ -114,6 +114,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Flashlight_Toggle"",
+                    ""type"": ""Button"",
+                    ""id"": ""ed027a7c-d347-468d-9f89-32ad8831c590"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -138,6 +147,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bb82b0cc-c472-4721-be9d-96f52f4b3432"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Flashlight_Toggle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -152,6 +172,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
         m_UI_Interact = m_UI.FindAction("Interact", throwIfNotFound: true);
+        m_UI_Flashlight_Toggle = m_UI.FindAction("Flashlight_Toggle", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -254,12 +275,14 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private IUIActions m_UIActionsCallbackInterface;
     private readonly InputAction m_UI_Pause;
     private readonly InputAction m_UI_Interact;
+    private readonly InputAction m_UI_Flashlight_Toggle;
     public struct UIActions
     {
         private @PlayerControls m_Wrapper;
         public UIActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Pause => m_Wrapper.m_UI_Pause;
         public InputAction @Interact => m_Wrapper.m_UI_Interact;
+        public InputAction @Flashlight_Toggle => m_Wrapper.m_UI_Flashlight_Toggle;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -275,6 +298,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Interact.started -= m_Wrapper.m_UIActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnInteract;
+                @Flashlight_Toggle.started -= m_Wrapper.m_UIActionsCallbackInterface.OnFlashlight_Toggle;
+                @Flashlight_Toggle.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnFlashlight_Toggle;
+                @Flashlight_Toggle.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnFlashlight_Toggle;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -285,6 +311,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @Flashlight_Toggle.started += instance.OnFlashlight_Toggle;
+                @Flashlight_Toggle.performed += instance.OnFlashlight_Toggle;
+                @Flashlight_Toggle.canceled += instance.OnFlashlight_Toggle;
             }
         }
     }
@@ -298,5 +327,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     {
         void OnPause(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnFlashlight_Toggle(InputAction.CallbackContext context);
     }
 }
