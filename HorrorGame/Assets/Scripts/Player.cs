@@ -20,7 +20,8 @@ public class Player : Entity
 	{
 		playerControls._2Dmovement.Jump.performed += _ => Jump();
 		playerControls._2Dmovement.Move.performed += cxt => Move(cxt.ReadValue<float>());
-	}
+        playerControls.UI.Interact.performed += _ => Hide();
+    }
 
 	private void OnEnable()
 	{
