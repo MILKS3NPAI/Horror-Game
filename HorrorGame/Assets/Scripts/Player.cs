@@ -56,4 +56,9 @@ public class Player : Entity
 	{
 		direction = iDirection;
 	}
+
+	void Hide()
+	{
+		Debug.Log("Hiding");
+	}
 }
