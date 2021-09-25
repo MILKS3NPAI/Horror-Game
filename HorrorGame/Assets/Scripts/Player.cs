@@ -20,7 +20,7 @@ public class Player : Entity
 	{
 		playerControls._2Dmovement.Jump.performed += _ => Jump();
 		playerControls._2Dmovement.Move.performed += cxt => Move(cxt.ReadValue<float>());
-        playerControls.UI.Interact.performed += _ => Hide();
+        playerControls.UI.Interact.performed += _ => Use();
     }
 
 	private void OnEnable()
@@ -58,8 +58,8 @@ public class Player : Entity
 		direction = iDirection;
 	}
 
-	void Hide()
+	void Use()
 	{
-		Debug.Log("Hiding");
+
 	}
 }
