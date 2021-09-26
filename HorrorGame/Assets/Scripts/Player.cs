@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Player : Entity
 {
-	[SerializeField] GameObject dialogue;
+	private GameObject dialogue, enemy;
 	private PlayerControls playerControls;
 	float direction;
 	[SerializeField] bool _hidden = false;
+	//[SerializeField] GameObject dialogue;
 	public bool mHidden { get { return _hidden; } set { if (_hidden == value) return; collider.isTrigger = value; physicsEnabled = !value; } }
 
 	protected override void Awake()
@@ -15,12 +16,8 @@ public class Player : Entity
 		base.Awake();
 		playerControls = new PlayerControls();
 		mGroundFilter = ConstantResources.sPlayerGroundMask;
-		foreach (Transform t in dialogue.GetComponentInChildren<Transform>())
-        {
-			t.gameObject.AddComponent<Dialogue>();
-			t.GetComponent<Dialogue>().dialogueOrder = Dialogue.currentDialogue;
-		}
-		Dialogue.currentDialogue = 0;
+		dialogue = FindObjectOfType<Dialogue>().gameObject;
+		enemy = FindObjectOfType<Enemy>().gameObject;
 	}
 
 	protected override void Start()
@@ -84,22 +81,29 @@ public class Player : Entity
 			Move(0);
 			playerControls._2Dmovement.Disable();
 			dialogue.transform.GetChild(Dialogue.currentDialogue).gameObject.SetActive(true);
-            try
+			if (Dialogue.dialogueSpeakers[Dialogue.currentDialogue].Equals("p"))
+			{
+				dialogue.transform.position = transform.position + new Vector3(0, 3, 0);
+			}
+            else
             {
+				dialogue.transform.position = enemy.transform.position + new Vector3(0, 3, 0);
+			}
+			try
+			{
 				dialogue.transform.GetChild(Dialogue.currentDialogue - 1).gameObject.SetActive(false);
 			}
-            catch (System.Exception ex)
-            {
+			catch (System.Exception ex)
+			{
 				Debug.Log(ex);
-            }
+			}
 			Dialogue.currentDialogue++;
 		}
-        else
-        {
+		else
+		{
+			playerControls._2Dmovement.Enable();
 			dialogue.transform.GetChild(dialogue.transform.childCount - 1).gameObject.SetActive(false);
 			Dialogue.currentDialogue = 0;
-			playerControls._2Dmovement.Enable();
-			dialogue.transform.GetChild(0).gameObject.SetActive(false);
 		}
-    }
+	}
 }
