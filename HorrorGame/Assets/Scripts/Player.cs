@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : Entity
 {
+	bool isInteracting;
+	[SerializeField] GameObject dialogue;
 	private PlayerControls playerControls;
 	float direction;
 	[SerializeField] bool _hidden = false;
@@ -22,6 +24,8 @@ public class Player : Entity
 		playerControls._2Dmovement.Move.performed += cxt => Move(cxt.ReadValue<float>());
         playerControls.UI.Interact.performed += _ => Use();
         playerControls.UI.Flashlight_Toggle.performed += _ => ToggleFlashlight();
+
+		playerControls.UI.Interact.performed += _ => Interaction();
     }
 
 	private void OnEnable()
@@ -67,5 +71,22 @@ public class Player : Entity
     void ToggleFlashlight()
     {
 
+    }
+
+	void Interaction()
+    {
+		if (!isInteracting)
+		{
+			isInteracting = true;
+			playerControls._2Dmovement.Disable();
+			dialogue.transform.GetChild(0).gameObject.SetActive(true);
+			Debug.Log("Player says hello world!");
+		}
+        else
+        {
+			isInteracting = false;
+			playerControls._2Dmovement.Enable();
+			dialogue.transform.GetChild(0).gameObject.SetActive(false);
+		}
     }
 }
