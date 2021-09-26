@@ -24,7 +24,10 @@ public class ComplexTraversal : MonoBehaviour
 		{
 			Entity lEntity = iOther.GetComponent<Entity>();
 			//Debug.Log("Trigger enter: " + lEntity);
-			BeginTraversal(lEntity);
+			if (Vector2.Dot(lEntity.mPreviousMovement, movementCondition) >= movementLeeway)
+			{
+				BeginTraversal(lEntity);
+			}
 		}
 		catch (Exception)
 		{
@@ -48,6 +51,10 @@ public class ComplexTraversal : MonoBehaviour
 		currentTarget = 0;
 		if (iEntity is Enemy lEnemy)
 		{
+			if (lEnemy.mAIState == AIState.COMPLEX_TRAVERSAL)
+			{
+				return;
+			}
 			previousState = lEnemy.mAIState;
 			lEnemy.mAIState = AIState.COMPLEX_TRAVERSAL;
 			//Debug.Log("Previous state: " + previousState);

@@ -25,6 +25,8 @@ public class Entity : MonoBehaviour
 	protected Vector2 previousEntityMovement = new Vector2();
 	protected Vector2 physicsMovement = new Vector2();
 	protected Vector2 entityMovement = new Vector2();
+	public Vector2 mMovement { get { return physicsMovement + entityMovement; } }
+	public Vector2 mPreviousMovement { get { return previousPhysicsMovement + previousEntityMovement; } }
 	[SerializeField]
 	float groundRayDistance = 1.25f;
 	[SerializeField]
