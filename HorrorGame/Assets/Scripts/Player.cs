@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Player : Entity
 {
-	bool isInteracting;
 	[SerializeField] GameObject dialogue;
 	private PlayerControls playerControls;
 	float direction;
@@ -16,6 +15,12 @@ public class Player : Entity
 		base.Awake();
 		playerControls = new PlayerControls();
 		mGroundFilter = ConstantResources.sPlayerGroundMask;
+		foreach (Transform t in dialogue.GetComponentInChildren<Transform>())
+        {
+			t.gameObject.AddComponent<Dialogue>();
+			t.GetComponent<Dialogue>().dialogueOrder = Dialogue.currentDialogue;
+		}
+		Dialogue.currentDialogue = 0;
 	}
 
 	protected override void Start()
@@ -23,9 +28,8 @@ public class Player : Entity
 		playerControls._2Dmovement.Jump.performed += _ => Jump();
 		playerControls._2Dmovement.Move.performed += cxt => Move(cxt.ReadValue<float>());
         playerControls.UI.Interact.performed += _ => Use();
-        playerControls.UI.Flashlight_Toggle.performed += _ => ToggleFlashlight();
-
-		playerControls.UI.Interact.performed += _ => Interaction();
+        playerControls.UI.Interact.performed += _ => Interaction();
+		playerControls.UI.Flashlight_Toggle.performed += _ => ToggleFlashlight();
     }
 
 	private void OnEnable()
@@ -75,16 +79,25 @@ public class Player : Entity
 
 	void Interaction()
     {
-		if (!isInteracting)
+		if (Dialogue.currentDialogue < dialogue.transform.childCount)
 		{
-			isInteracting = true;
+			Move(0);
 			playerControls._2Dmovement.Disable();
-			dialogue.transform.GetChild(0).gameObject.SetActive(true);
-			Debug.Log("Player says hello world!");
+			dialogue.transform.GetChild(Dialogue.currentDialogue).gameObject.SetActive(true);
+            try
+            {
+				dialogue.transform.GetChild(Dialogue.currentDialogue - 1).gameObject.SetActive(false);
+			}
+            catch (System.Exception ex)
+            {
+				Debug.Log(ex);
+            }
+			Dialogue.currentDialogue++;
 		}
         else
         {
-			isInteracting = false;
+			dialogue.transform.GetChild(dialogue.transform.childCount - 1).gameObject.SetActive(false);
+			Dialogue.currentDialogue = 0;
 			playerControls._2Dmovement.Enable();
 			dialogue.transform.GetChild(0).gameObject.SetActive(false);
 		}
