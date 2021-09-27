@@ -2749,12 +2749,12 @@ MonoBehaviour:
   - clip: {fileID: 8300000, guid: 1211d890f53e60a4181245f8d72b8887, type: 3}
     source: {fileID: 0}
     canLoop: 1
-    volume: 0.3
+    volume: 0.5
     name: Music1
   - clip: {fileID: 8300000, guid: af55b640179b087468134fb0abefc9b6, type: 3}
     source: {fileID: 0}
     canLoop: 1
-    volume: 0.3
+    volume: 0.5
     name: Music2
   - clip: {fileID: 8300000, guid: 6c67a50a43aaff94a807ad2816e367e7, type: 3}
     source: {fileID: 0}
@@ -2763,7 +2763,7 @@ MonoBehaviour:
     name: Step1
   - clip: {fileID: 8300000, guid: 8471518388fd93f4b944f80f309b2ed2, type: 3}
     source: {fileID: 0}
-    canLoop: 0
+    canLoop: 1
     volume: 1
     name: Step2
 --- !u!1 &1661590475

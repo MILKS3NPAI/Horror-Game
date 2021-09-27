@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : Entity
 {
+	private AudioManager audioManager;
 	private GameObject dialogue, enemy;
 	private PlayerControls playerControls;
 	float direction;
@@ -16,6 +17,7 @@ public class Player : Entity
 		base.Awake();
 		playerControls = new PlayerControls();
 		mGroundFilter = ConstantResources.sPlayerGroundMask;
+		audioManager = FindObjectOfType<AudioManager>();
 		dialogue = FindObjectOfType<Dialogue>().gameObject;
 		enemy = FindObjectOfType<Enemy>().gameObject;
 	}
@@ -58,10 +60,45 @@ public class Player : Entity
 		MoveRelative(lMovement.normalized);
 		base.FixedUpdate();
 	}
+    protected override void Update()
+    {
+		if (PlayerRoom().Equals("right"))
+		{
+			audioManager.MuteSound("Music2");
+			audioManager.UnmuteSound("Music1");
+		}
+		else if (PlayerRoom().Equals("left"))
+		{
+			audioManager.MuteSound("Music1");
+			audioManager.UnmuteSound("Music2");
+		}
+		else
+		{
+			Debug.Log("Player is not in a room.");
+		}
+	}
 
-	private void Move(float iDirection)
+    private void Move(float iDirection)
 	{
 		direction = iDirection;
+		if (iDirection != 0 && mGroundDetected)
+        {
+			if (PlayerRoom().Equals("right"))
+            {
+				audioManager.PlaySound("Step1");
+				audioManager.StopSound("Step2");
+			}
+            else if (PlayerRoom().Equals("left"))
+            {
+				audioManager.StopSound("Step1");
+				audioManager.PlaySound("Step2");
+			}
+        }
+        else
+        {
+			audioManager.StopSound("Step1");
+			audioManager.StopSound("Step2");
+		}
 	}
 
 	void Use()
@@ -104,6 +141,18 @@ public class Player : Entity
 			playerControls._2Dmovement.Enable();
 			dialogue.transform.GetChild(dialogue.transform.childCount - 1).gameObject.SetActive(false);
 			Dialogue.currentDialogue = 0;
+		}
+	}
+	// Determines what room the player is in
+	private string PlayerRoom()
+	{
+		if (transform.position.x >= 0)
+		{
+			return "right";
+		}
+		else
+		{
+			return "left";
 		}
 	}
 }

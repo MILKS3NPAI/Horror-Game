@@ -52,6 +52,7 @@ public class Entity : MonoBehaviour
 	public Vector2 mGroundDetectionPoint { get; protected set; }
 	public Vector2 mGroundDetectionUnderfootPoint { get { return new Vector2((mPosition2D + collider.offset).x, mGroundDetectionPoint.y + groundDistance); } }
 	public float mMoveSpeed { get { return moveSpeed; } }
+	public bool mGroundDetected { get { return groundDetected; } }
 
 	protected virtual void Awake()
 	{
