@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Player : Entity
 {
-	private AudioManager audioManager;
 	private GameObject dialogue, enemy;
 	private PlayerControls playerControls;
 	float direction;
@@ -17,7 +16,6 @@ public class Player : Entity
 		base.Awake();
 		playerControls = new PlayerControls();
 		mGroundFilter = ConstantResources.sPlayerGroundMask;
-		audioManager = FindObjectOfType<AudioManager>();
 		dialogue = FindObjectOfType<Dialogue>().gameObject;
 		enemy = FindObjectOfType<Enemy>().gameObject;
 	}
@@ -64,13 +62,13 @@ public class Player : Entity
     {
 		if (PlayerRoom().Equals("right"))
 		{
-			audioManager.MuteSound("Music2");
-			audioManager.UnmuteSound("Music1");
+			AudioManager.MuteSound("Music2");
+			AudioManager.UnmuteSound("Music1");
 		}
 		else if (PlayerRoom().Equals("left"))
 		{
-			audioManager.MuteSound("Music1");
-			audioManager.UnmuteSound("Music2");
+			AudioManager.MuteSound("Music1");
+			AudioManager.UnmuteSound("Music2");
 		}
 		else
 		{
@@ -85,19 +83,19 @@ public class Player : Entity
         {
 			if (PlayerRoom().Equals("right"))
             {
-				audioManager.PlaySound("Step1");
-				audioManager.StopSound("Step2");
+				AudioManager.PlaySound("Step1");
+				AudioManager.StopSound("Step2");
 			}
             else if (PlayerRoom().Equals("left"))
             {
-				audioManager.StopSound("Step1");
-				audioManager.PlaySound("Step2");
+				AudioManager.StopSound("Step1");
+				AudioManager.PlaySound("Step2");
 			}
         }
         else
         {
-			audioManager.StopSound("Step1");
-			audioManager.StopSound("Step2");
+			AudioManager.StopSound("Step1");
+			AudioManager.StopSound("Step2");
 		}
 	}
 
