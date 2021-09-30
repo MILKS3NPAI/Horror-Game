@@ -36,7 +36,6 @@ public class Enemy : Entity
 		stateFixeds[(int)AIState.PATROL] = PatrolFixed;
 		stateFixeds[(int)AIState.CHASE] = ChaseFixed;
 		stateFixeds[(int)AIState.COMPLEX_TRAVERSAL] = TraverseFixed;
-		mGroundFilter = ConstantResources.sEnemyGroundMask;
 	}
 
 	void DoNothing()

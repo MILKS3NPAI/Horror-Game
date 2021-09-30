@@ -10,14 +10,17 @@ public class ConstantResources
 	public static ContactFilter2D sGroundMask = new ContactFilter2D();
 	public static ContactFilter2D sPlayerGroundMask = new ContactFilter2D();
 	public static ContactFilter2D sEnemyGroundMask = new ContactFilter2D();
+	public static ContactFilter2D sUseableMask = new ContactFilter2D();
 	public static void Initialize()
 	{
 		sGroundMask.layerMask = LayerMask.GetMask("Terrain");
 		sPlayerGroundMask.layerMask = LayerMask.GetMask("Terrain", "Enemy");
 		sEnemyGroundMask.layerMask = LayerMask.GetMask("Terrain", "Player");
+		sUseableMask.layerMask = LayerMask.GetMask("Useable");
 		sGroundMask.useLayerMask = true;
 		sPlayerGroundMask.useLayerMask = true;
 		sEnemyGroundMask.useLayerMask = true;
+		sUseableMask.useLayerMask = true;
 	}
 	public static Array EnumArray<T>()
 	{

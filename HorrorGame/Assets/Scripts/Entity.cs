@@ -32,9 +32,10 @@ public class Entity : MonoBehaviour
 	[SerializeField]
 	float stepHeight = .5f;
 	[SerializeField]
-	Vector2 velocity = new Vector2();
+	protected Vector2 velocity = new Vector2(0f, -1f);
 	Rigidbody2D body;
 	new protected BoxCollider2D collider;
+	public BoxCollider2D mCollider { get { if (collider == null) collider = GetComponent<BoxCollider2D>(); return collider; } }
 	[SerializeField]
 	bool groundDetected = false;
 	protected List<RaycastHit2D> recentFloorHits = new List<RaycastHit2D>();
@@ -42,7 +43,9 @@ public class Entity : MonoBehaviour
 	UnityAction[] physicsActions;
 	UnityAction<Vector2>[] moveActions;
 	public bool physicsEnabled = true;
-	public ContactFilter2D mGroundFilter { get; protected set; }
+	[SerializeField]
+	ContactFilter2D _groundFilter;
+	public ContactFilter2D mGroundFilter { get { return _groundFilter; } protected set { _groundFilter = value; } }
 	public Vector2 mPosition2D { get { return new Vector2(transform.position.x, transform.position.y); } }
 	public Vector2 mPosition { get { return transform.position; } }
 	bool mGrounded { get { return groundDetected && (velocity.y <= 0); } }
@@ -68,7 +71,6 @@ public class Entity : MonoBehaviour
 		collider = GetComponent<BoxCollider2D>();
 		physicsActions = new UnityAction[] { FloorMissAction, FloorHitAction };
 		moveActions = new UnityAction<Vector2>[] { MoveThroughAir, MoveAlongFloor };
-		mGroundFilter = ConstantResources.sGroundMask;
 	}
 
 	protected virtual void Start()

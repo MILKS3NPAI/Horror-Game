@@ -6,17 +6,23 @@ public class Player : Entity
 {
 	private GameObject dialogue, enemy;
 	private PlayerControls playerControls;
+	public PlayerControls mPlayerControls { get { return playerControls; } }
 	float direction;
 	[SerializeField] bool _hidden = false;
+	float useRadius = 3f;
 	//[SerializeField] GameObject dialogue;
-	public bool mHidden { get { return _hidden; } set { if (_hidden == value) return; collider.isTrigger = value; physicsEnabled = !value; } }
+	public bool mHidden { get { return _hidden; } set { if (_hidden == value) return; _hidden = value; collider.isTrigger = value; physicsEnabled = !value; } }
 
 	protected override void Awake()
 	{
 		base.Awake();
 		playerControls = new PlayerControls();
 		mGroundFilter = ConstantResources.sPlayerGroundMask;
-		dialogue = FindObjectOfType<Dialogue>().gameObject;
+		if (dialogue == null)
+		{
+			Dialogue lDialog = FindObjectOfType<Dialogue>();
+			if (lDialog != null) { dialogue = lDialog.gameObject; }
+		}
 		enemy = FindObjectOfType<Enemy>().gameObject;
 	}
 
@@ -24,10 +30,10 @@ public class Player : Entity
 	{
 		playerControls._2Dmovement.Jump.performed += _ => Jump();
 		playerControls._2Dmovement.Move.performed += cxt => Move(cxt.ReadValue<float>());
-        playerControls.UI.Interact.performed += _ => Use();
-        playerControls.UI.Interact.performed += _ => Interaction();
+		playerControls.UI.Interact.performed += _ => Use();
+		playerControls.UI.Interact.performed += _ => Interaction();
 		playerControls.UI.Flashlight_Toggle.performed += _ => ToggleFlashlight();
-    }
+	}
 
 	private void OnEnable()
 	{
@@ -58,8 +64,8 @@ public class Player : Entity
 		MoveRelative(lMovement.normalized);
 		base.FixedUpdate();
 	}
-    protected override void Update()
-    {
+	protected override void Update()
+	{
 		if (PlayerRoom().Equals("right"))
 		{
 			AudioManager.MuteSound("Music2");
@@ -76,24 +82,24 @@ public class Player : Entity
 		}
 	}
 
-    private void Move(float iDirection)
+	private void Move(float iDirection)
 	{
 		direction = iDirection;
 		if (iDirection != 0 && mGroundDetected)
-        {
+		{
 			if (PlayerRoom().Equals("right"))
-            {
+			{
 				AudioManager.PlaySound("Step1");
 				AudioManager.StopSound("Step2");
 			}
-            else if (PlayerRoom().Equals("left"))
-            {
+			else if (PlayerRoom().Equals("left"))
+			{
 				AudioManager.StopSound("Step1");
 				AudioManager.PlaySound("Step2");
 			}
-        }
-        else
-        {
+		}
+		else
+		{
 			AudioManager.StopSound("Step1");
 			AudioManager.StopSound("Step2");
 		}
@@ -101,16 +107,33 @@ public class Player : Entity
 
 	void Use()
 	{
+		Collider2D[] lUseables = new Collider2D[1];
+		if (Physics2D.OverlapCircle(mPosition2D, useRadius, ConstantResources.sUseableMask, lUseables) > 0)
+		{
+			foreach (Collider2D lCollider in lUseables) {
+				Useable lUseable = lCollider.GetComponent<Useable>();
+				if (lUseable == null)
+				{
+					continue;
+				}
+				lUseable.Use(this);
+				break;
+			}
+		}
 
 	}
 
-    void ToggleFlashlight()
-    {
+	void ToggleFlashlight()
+	{
 
-    }
+	}
 
 	void Interaction()
-    {
+	{
+		if (dialogue == null)
+		{
+			return;
+		}
 		if (Dialogue.currentDialogue < dialogue.transform.childCount)
 		{
 			Move(0);
@@ -120,8 +143,8 @@ public class Player : Entity
 			{
 				dialogue.transform.position = transform.position + new Vector3(0, 3, 0);
 			}
-            else
-            {
+			else
+			{
 				dialogue.transform.position = enemy.transform.position + new Vector3(0, 3, 0);
 			}
 			try
