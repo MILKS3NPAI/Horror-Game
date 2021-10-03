@@ -128,8 +128,12 @@ public class Player : Entity
 
 	}
 
+    
 	void Interaction()
 	{
+
+
+        /*
 		if (dialogue == null)
 		{
 			return;
@@ -163,7 +167,9 @@ public class Player : Entity
 			dialogue.transform.GetChild(dialogue.transform.childCount - 1).gameObject.SetActive(false);
 			Dialogue.currentDialogue = 0;
 		}
+        */
 	}
+
 	// Determines what room the player is in
 	private string PlayerRoom()
 	{

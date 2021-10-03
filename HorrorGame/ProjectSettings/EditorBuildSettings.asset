@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/Ron's Scene.unity
+    guid: 82523004965df6c4aadd2bf13fddd82a
   m_configObjects: {}
