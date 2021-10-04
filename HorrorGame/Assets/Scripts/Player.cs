@@ -12,8 +12,14 @@ public class Player : Entity
 	float useRadius = 3f;
 	//[SerializeField] GameObject dialogue;
 	public bool mHidden { get { return _hidden; } set { if (_hidden == value) return; _hidden = value; collider.isTrigger = value; physicsEnabled = !value; } }
+    [SerializeField] GameObject flashlight;
+    //Get mouse poition
+    Vector2 mousePos;
+    Vector2 mouseAim;
+    public Camera cam;
+    private Transform flTransform;
 
-	protected override void Awake()
+    protected override void Awake()
 	{
 		base.Awake();
 		playerControls = new PlayerControls();
@@ -24,6 +30,9 @@ public class Player : Entity
 			if (lDialog != null) { dialogue = lDialog.gameObject; }
 		}
 		enemy = FindObjectOfType<Enemy>().gameObject;
+
+        flashlight = this.gameObject.transform.Find("Flashlight").gameObject;
+        flTransform = flashlight.GetComponent<Transform>();
 	}
 
 	protected override void Start()
@@ -80,7 +89,16 @@ public class Player : Entity
 		{
 			Debug.Log("Player is not in a room.");
 		}
-	}
+
+        //Flashlight
+        mouseAim = playerControls._2Dmovement.Aim.ReadValue<Vector2>();
+
+        mousePos = cam.ScreenToWorldPoint(mouseAim);
+
+        Vector2 lookDir = mousePos - new Vector2 (flTransform.position.x, flTransform.position.y);
+        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
+        flTransform.rotation = Quaternion.Euler(0,0,angle);
+    }
 
 	private void Move(float iDirection)
 	{
