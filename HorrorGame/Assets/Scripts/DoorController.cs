@@ -22,7 +22,7 @@ public class DoorController : MonoBehaviour
         if (id == this.id)
         {
             pos = player.GetComponent<Transform>().position;
-            pos.y += 18 * dir;
+            pos.y += 15 * dir;
             player.GetComponent<Transform>().position = pos;
         }
     }
