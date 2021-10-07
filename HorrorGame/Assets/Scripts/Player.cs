@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class Player : Entity
 {
-	private GameObject dialogue, enemy;
+	private Dialogue dialogue;
+	private GameObject enemy;
 	private PlayerControls playerControls;
 	public PlayerControls mPlayerControls { get { return playerControls; } }
 	float direction;
@@ -27,7 +28,7 @@ public class Player : Entity
 		if (dialogue == null)
 		{
 			Dialogue lDialog = FindObjectOfType<Dialogue>();
-			if (lDialog != null) { dialogue = lDialog.gameObject.transform.GetChild(0).gameObject; }
+			if (lDialog != null) { dialogue = lDialog; }
 		}
 		enemy = FindObjectOfType<Enemy>().gameObject;
 
@@ -151,35 +152,23 @@ public class Player : Entity
 	{
 
 
-        //*
+        /*
 		if (dialogue == null)
 		{
 			return;
 		}
-		if (Dialogue.currentDialogue < Dialogue.dialogue.Count)
+		if (Dialogue.currentDialogue < Dialogue.dialogueSequence.Count)
 		{
 			Move(0);
 			playerControls._2Dmovement.Disable();
-			dialogue.SetActive(true);
-			dialogue.transform.GetChild(0).GetComponent<Text>().text =
-				Dialogue.dialogue[Dialogue.currentDialogue].Substring(3);
-			if (Dialogue.dialogue[Dialogue.currentDialogue].Substring(0, 1).Equals("P"))
-            {
-				dialogue.transform.position = transform.position + new Vector3(0, 2, 0);
-			}
-            else if (Dialogue.dialogue[Dialogue.currentDialogue].Substring(0, 1).Equals("E"))
-			{
-				dialogue.transform.position = enemy.transform.position + new Vector3(0, 2, 0);
-			}
-			Dialogue.currentDialogue++;
+			dialogue.ShowDialogue();
 		}
 		else
 		{
 			playerControls._2Dmovement.Enable();
-			dialogue.SetActive(false);
-			Dialogue.currentDialogue = 0;
+			dialogue.HideDialogue();
 		}
-        //*/
+        */
 	}
 
 	// Determines what room the player is in
