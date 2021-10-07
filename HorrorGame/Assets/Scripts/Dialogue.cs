@@ -1,26 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class Dialogue : MonoBehaviour
 {
     public static int currentDialogue = 0;
-    public static string[] dialogueSpeakers;
+    public static List<string> dialogue;
+    [SerializeField] TextAsset file;
     private void Awake()
     {
-        dialogueSpeakers = new string[transform.childCount];
-        int i = 0;
-        foreach (Transform t in transform.GetComponent<Transform>())
+        dialogue = new List<string>();
+        dialogue.AddRange(file.text.Split("\n"[0]));
+        for (int i = 0; i < dialogue.Count; i++)
         {
-            if (transform.GetChild(i).gameObject.name.Contains("Player"))
-            {
-                dialogueSpeakers[i] = "p";
-            }
-            else
-            {
-                dialogueSpeakers[i] = "e";
-            }
-            i++;
+            //Debug.Log(dialogue[i].Substring(0, 1) + " says " + dialogue[i].Substring(3));
         }
     }
 }

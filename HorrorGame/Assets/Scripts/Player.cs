@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : Entity
 {
@@ -10,7 +11,6 @@ public class Player : Entity
 	float direction;
 	[SerializeField] bool _hidden = false;
 	float useRadius = 3f;
-	//[SerializeField] GameObject dialogue;
 	public bool mHidden { get { return _hidden; } set { if (_hidden == value) return; _hidden = value; collider.isTrigger = value; physicsEnabled = !value; } }
     [SerializeField] GameObject flashlight;
     //Get mouse poition
@@ -27,7 +27,7 @@ public class Player : Entity
 		if (dialogue == null)
 		{
 			Dialogue lDialog = FindObjectOfType<Dialogue>();
-			if (lDialog != null) { dialogue = lDialog.gameObject; }
+			if (lDialog != null) { dialogue = lDialog.gameObject.transform.GetChild(0).gameObject; }
 		}
 		enemy = FindObjectOfType<Enemy>().gameObject;
 
@@ -151,41 +151,35 @@ public class Player : Entity
 	{
 
 
-        /*
+        //*
 		if (dialogue == null)
 		{
 			return;
 		}
-		if (Dialogue.currentDialogue < dialogue.transform.childCount)
+		if (Dialogue.currentDialogue < Dialogue.dialogue.Count)
 		{
 			Move(0);
 			playerControls._2Dmovement.Disable();
-			dialogue.transform.GetChild(Dialogue.currentDialogue).gameObject.SetActive(true);
-			if (Dialogue.dialogueSpeakers[Dialogue.currentDialogue].Equals("p"))
-			{
-				dialogue.transform.position = transform.position + new Vector3(0, 3, 0);
+			dialogue.SetActive(true);
+			dialogue.transform.GetChild(0).GetComponent<Text>().text =
+				Dialogue.dialogue[Dialogue.currentDialogue].Substring(3);
+			if (Dialogue.dialogue[Dialogue.currentDialogue].Substring(0, 1).Equals("P"))
+            {
+				dialogue.transform.position = transform.position + new Vector3(0, 2, 0);
 			}
-			else
+            else if (Dialogue.dialogue[Dialogue.currentDialogue].Substring(0, 1).Equals("E"))
 			{
-				dialogue.transform.position = enemy.transform.position + new Vector3(0, 3, 0);
-			}
-			try
-			{
-				dialogue.transform.GetChild(Dialogue.currentDialogue - 1).gameObject.SetActive(false);
-			}
-			catch (System.Exception ex)
-			{
-				Debug.Log(ex);
+				dialogue.transform.position = enemy.transform.position + new Vector3(0, 2, 0);
 			}
 			Dialogue.currentDialogue++;
 		}
 		else
 		{
 			playerControls._2Dmovement.Enable();
-			dialogue.transform.GetChild(dialogue.transform.childCount - 1).gameObject.SetActive(false);
+			dialogue.SetActive(false);
 			Dialogue.currentDialogue = 0;
 		}
-        */
+        //*/
 	}
 
 	// Determines what room the player is in
