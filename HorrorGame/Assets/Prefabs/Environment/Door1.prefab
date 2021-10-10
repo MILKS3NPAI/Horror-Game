@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3144550758911867744}
   - component: {fileID: 3144550758911867747}
   - component: {fileID: 3144550758911867745}
-  - component: {fileID: 1270909231}
   m_Layer: 0
   m_Name: Door1
   m_TagString: Untagged
@@ -28,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3144550758911867759}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 8.695, y: -1.99, z: 0}
-  m_LocalScale: {x: 1.4069034, y: 3.5134542, z: 1}
+  m_LocalScale: {x: 0.32540643, y: 0.42854926, z: 1}
   m_Children:
   - {fileID: 3144550759197571936}
   m_Father: {fileID: 0}
@@ -74,8 +73,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Sprite: {fileID: 21300000, guid: cb8cb7525851cac46ac91d49b4bb32aa, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 77cdfaaba77132e4a95413fbde5d138a, type: 3}
+  m_Color: {r: 0.8773585, g: 0.8773585, b: 0.8773585, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -99,32 +98,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dir: 1
   id: 1
---- !u!114 &1270909231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3144550758911867759}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ShadowGroup: 0
-  m_HasRenderer: 1
-  m_UseRendererSilhouette: 1
-  m_CastsShadows: 1
-  m_SelfShadows: 0
-  m_ApplyToSortingLayers: 00000000
-  m_ShapePath:
-  - {x: -0.6717856, y: -0.44819933, z: 0}
-  - {x: 0.67178285, y: -0.47685876, z: 0}
-  - {x: 0.6717893, y: 0.4768587, z: 0}
-  - {x: -0.6717856, y: 0.50551766, z: 0}
-  m_ShapePathHash: 899915717
-  m_Mesh: {fileID: 0}
-  m_InstanceId: 17190
 --- !u!1 &3144550759197571951
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,7 +156,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.036201805, y: 0}
+  m_Offset: {x: 0.07482886, y: -0.11786461}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -194,5 +167,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.4046621, y: 1}
+  m_Size: {x: 4.291533, y: 6.4218636}
   m_EdgeRadius: 0
