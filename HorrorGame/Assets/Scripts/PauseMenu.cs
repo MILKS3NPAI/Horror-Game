@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -58,7 +59,10 @@ public class PauseMenu : MonoBehaviour
     }
     public void ExitGame()
     {
-        Debug.Log("You quit");
+        ResumeGame();
+        AudioManager.StopSound("Music1");
+        AudioManager.StopSound("Music2");
+        SceneManager.LoadScene(sceneName: "Main Menu");
     }
 
     //Rename however you want
