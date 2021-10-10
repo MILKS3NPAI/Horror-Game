@@ -59,6 +59,7 @@ public class PauseMenu : MonoBehaviour
     }
     public void ExitGame()
     {
+        ResumeGame();
         AudioManager.StopSound("Music1");
         AudioManager.StopSound("Music2");
         SceneManager.LoadScene(sceneName: "Main Menu");

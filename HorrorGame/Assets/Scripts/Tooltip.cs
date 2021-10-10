@@ -38,7 +38,7 @@ public class Tooltip : MonoBehaviour
 
         //rectTransform.pivot = new Vector2(pivotX, pivotY);
         //transform.position = mousePos;
-        transform.position = player.transform.position + new Vector3(0, 2, 0);
+        transform.position = player.transform.position - new Vector3(0, 3, 0);
     }
     public void SetText(string content, string header = "")
     {
