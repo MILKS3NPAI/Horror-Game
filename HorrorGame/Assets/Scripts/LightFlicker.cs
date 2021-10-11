@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering.Universal;
+using UnityEngine.Experimental.Rendering;//.Universal;
 
 public class LightFlicker : MonoBehaviour
 {
@@ -22,10 +22,10 @@ public class LightFlicker : MonoBehaviour
     IEnumerator FlickerLight()
     {
         isFlick = true;
-        this.gameObject.GetComponent<Light2D>().enabled = false;
+        this.gameObject.GetComponent<Light>().enabled = false;
         timeDelay = Random.Range(0.01f, 0.2f);
         yield return new WaitForSeconds(timeDelay);
-        this.gameObject.GetComponent<Light2D>().enabled = true;
+        this.gameObject.GetComponent<Light>().enabled = true;
         timeDelay = Random.Range(0.01f, 0.2f);
         yield return new WaitForSeconds(timeDelay);
         isFlick = false;

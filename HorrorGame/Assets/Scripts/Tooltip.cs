@@ -11,12 +11,10 @@ public class Tooltip : MonoBehaviour
     public LayoutElement layoutElement;
     public RectTransform rectTransform;
     public Text headerField, contentField;
-    private GameObject player;
     private int charWrapLimit = 20;
     
     private void Awake()
     {
-        player = FindObjectOfType<Player>().gameObject;
         rectTransform = GetComponent<RectTransform>();
     }
 
@@ -38,7 +36,9 @@ public class Tooltip : MonoBehaviour
 
         //rectTransform.pivot = new Vector2(pivotX, pivotY);
         //transform.position = mousePos;
-        transform.position = player.transform.position - new Vector3(0, 3, 0);
+
+        if (TooltipTrigger.tooltipObject != null)
+        transform.position = TooltipTrigger.tooltipObject.transform.position - new Vector3(0, 4, 0);
     }
     public void SetText(string content, string header = "")
     {
