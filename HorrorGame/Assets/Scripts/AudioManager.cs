@@ -24,6 +24,10 @@ public class AudioManager : MonoBehaviour
     {
         foreach (Sound s in sounds)
         {
+            if (PauseMenu.notFirstLoad)
+            {
+                s.volume = PauseMenu.volume;
+            }
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.loop = s.canLoop;
             s.source.clip = s.clip;
@@ -31,7 +35,6 @@ public class AudioManager : MonoBehaviour
         }
         PlaySound("Music1");
         PlaySound("Music2");
-
     }
 
     public static void PlaySound(string name)
@@ -64,6 +67,14 @@ public class AudioManager : MonoBehaviour
         if (s != null)
         {
             s.source.volume = s.volume;
+        }
+    }
+    public static void SetVolume(float volume)
+    {
+        foreach (Sound s in AM.sounds)
+        {
+            s.source.volume = volume;
+            s.volume = volume;
         }
     }
 }
