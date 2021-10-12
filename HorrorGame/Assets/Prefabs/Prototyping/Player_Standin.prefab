@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 39247558}
-  m_LocalRotation: {x: 0.66084707, y: -0.75052065, z: -0, w: 0}
-  m_LocalPosition: {x: -0.43, y: 0.2, z: 0.111839294}
+  m_LocalRotation: {x: -0, y: -0, z: -0.6228669, w: 0.78232783}
+  m_LocalPosition: {x: 1.01, y: -0.78, z: 0.111839294}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 4933646990205356876}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -180, z: -78.83}
+  m_LocalEulerAnglesHint: {x: -180, y: -180, z: -257.052}
 --- !u!114 &39247560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46,9 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LightType: 3
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.549
+  m_FalloffIntensity: 0.684
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.9
   m_LightVolumeOpacity: 0.099
   m_ApplyToSortingLayers: 00000000db3f2827
   m_LightCookieSprite: {fileID: 0}
@@ -60,7 +60,7 @@ MonoBehaviour:
   m_PointLightInnerAngle: 20.5
   m_PointLightOuterAngle: 44.17
   m_PointLightInnerRadius: 4.407556
-  m_PointLightOuterRadius: 8.986816
+  m_PointLightOuterRadius: 9.936756
   m_PointLightDistance: 3
   m_PointLightQuality: 1
   m_ShapeLightParametricSides: 5
@@ -160,8 +160,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f863619a3901ebc47872dd6eb631e96a, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: ac6ff73cdb340d342a5f040a83223623, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -193,7 +193,7 @@ MonoBehaviour:
   previousPhysicsMovement: {x: 0, y: 0}
   previousEntityMovement: {x: 0, y: 0}
   groundRayDistance: 2
-  stepHeight: 2
+  stepHeight: 0.33
   velocity: {x: 0, y: 0}
   groundDetected: 0
   physicsEnabled: 1
@@ -227,18 +227,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.20939302}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.21, y: 2.3}
+    oldSize: {x: 8.64, y: 6.48}
     newSize: {x: 2.21, y: 2.3}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5405969, y: 1.8376293}
+  m_Size: {x: 0.5405969, y: 2.3656776}
   m_EdgeRadius: 0
 --- !u!50 &4933646990205356875
 Rigidbody2D:
@@ -271,7 +271,7 @@ Animator:
   m_GameObject: {fileID: 4933646990205356879}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a2d81dffdabfb8441aef72a95927f909, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1a6f65beaa199c1429e30158429da8a2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

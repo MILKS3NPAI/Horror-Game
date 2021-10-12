@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class Player : Entity
 {
+    private Transform pTransfrom;
+    private Animator animator;
 	private Dialogue dialogue;
 	private GameObject enemy;
 	private PlayerControls playerControls;
@@ -34,6 +36,8 @@ public class Player : Entity
 
         flashlight = this.gameObject.transform.Find("Flashlight").gameObject;
         flTransform = flashlight.GetComponent<Transform>();
+        animator = this.gameObject.GetComponent<Animator>();
+        pTransfrom = this.gameObject.GetComponent<Transform>();
 	}
 
 	protected override void Start()
@@ -72,7 +76,17 @@ public class Player : Entity
         }*/
 
 		MoveRelative(lMovement.normalized);
-		base.FixedUpdate();
+        animator.SetFloat("Horizontal", lMovement.x);
+        animator.SetFloat("Speed", lMovement.sqrMagnitude);
+        if (lMovement.x < 0)
+        {
+            this.transform.localScale = new Vector3(-0.5f, transform.localScale.y, transform.localScale.z); 
+        }
+        else if (lMovement.x > 0)
+        {
+            this.transform.localScale = new Vector3(0.5f, transform.localScale.y, transform.localScale.z);
+        }
+            base.FixedUpdate();
 	}
 	protected override void Update()
 	{
