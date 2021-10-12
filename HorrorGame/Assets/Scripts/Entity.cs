@@ -52,7 +52,7 @@ public class Entity : MonoBehaviour
 	bool mGrounded { get { return groundDetected && (velocity.y <= 0); } }
 	public Vector2 mGroundDetectionOrigin { get { return (mPosition2D + collider.offset) + ((Vector2.down * collider.size.y * .5f * transform.localScale.y) + (Vector2.up * stepHeight)); } }
 	public Vector2 mGroundDetectionBoxDimensions { get { return new Vector2(collider.size.x, collider.size.y * .5f) * transform.localScale.y; } }
-	public float mGroundDetectionDistance { get { return (groundDistance * Mathf.Max(-velocity.y, minDist) * Time.fixedDeltaTime) + stepHeight + groundRayDistance; } }
+	public float mGroundDetectionDistance { get { return (Mathf.Max(-velocity.y, minDist) * groundDistance *  Time.fixedDeltaTime) + stepHeight + groundRayDistance; } }
 	public Vector2 mGroundDetectionPoint { get; protected set; }
 	public Vector2 mGroundDetectionUnderfootPoint { get { return new Vector2((mPosition2D + collider.offset).x, mGroundDetectionPoint.y + (groundDistance - (velocity.y * Time.fixedDeltaTime))); } }
 	public float mMoveSpeed { get { return moveSpeed; } }

@@ -26,6 +26,7 @@ public class Player : Entity
 	{
 		base.Awake();
 		playerControls = new PlayerControls();
+		ConstantResources.Initialize();
 		mGroundFilter = ConstantResources.sPlayerGroundMask;
 		if (dialogue == null)
 		{
@@ -36,7 +37,7 @@ public class Player : Entity
 
         flashlight = this.gameObject.transform.Find("Flashlight").gameObject;
         flTransform = flashlight.GetComponent<Transform>();
-        animator = this.gameObject.GetComponent<Animator>();
+        animator = this.gameObject.GetComponentInChildren<Animator>();
         pTransfrom = this.gameObject.GetComponent<Transform>();
 	}
 
@@ -80,11 +81,11 @@ public class Player : Entity
         animator.SetFloat("Speed", lMovement.sqrMagnitude);
         if (lMovement.x < 0)
         {
-            this.transform.localScale = new Vector3(-0.5f, transform.localScale.y, transform.localScale.z); 
+            this.transform.localScale = new Vector3(-1 * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z); 
         }
         else if (lMovement.x > 0)
         {
-            this.transform.localScale = new Vector3(0.5f, transform.localScale.y, transform.localScale.z);
+            this.transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }
             base.FixedUpdate();
 	}

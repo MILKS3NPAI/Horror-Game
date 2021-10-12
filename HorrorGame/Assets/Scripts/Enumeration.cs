@@ -11,8 +11,14 @@ public class ConstantResources
 	public static ContactFilter2D sPlayerGroundMask = new ContactFilter2D();
 	public static ContactFilter2D sEnemyGroundMask = new ContactFilter2D();
 	public static ContactFilter2D sUseableMask = new ContactFilter2D();
+	static bool initialized = false;
 	public static void Initialize()
 	{
+		if (initialized)
+		{
+			return;
+		}
+		initialized = true;
 		sGroundMask.layerMask = LayerMask.GetMask("Terrain");
 		sPlayerGroundMask.layerMask = LayerMask.GetMask("Terrain", "Enemy");
 		sEnemyGroundMask.layerMask = LayerMask.GetMask("Terrain", "Player");
@@ -55,7 +61,7 @@ public class ConstantResources
 
 public enum StimulusType
 {
-	AUDIO = 1,VISUAL = 2,PHYSICAL = 4,SCRIPTED = 100
+	AUDIO = 1, VISUAL = 2, PHYSICAL = 4, SCRIPTED = 100
 }
 
 public enum AIState
@@ -63,6 +69,7 @@ public enum AIState
 	INACTIVE, IDLE, PATROL, CHASE, COMPLEX_TRAVERSAL, SEARCH, SCRIPTED
 }
 
-public enum StateEvent {
-	ENTER,UPDATE,FIXED,EXIT
+public enum StateEvent
+{
+	ENTER, UPDATE, FIXED, EXIT
 }
