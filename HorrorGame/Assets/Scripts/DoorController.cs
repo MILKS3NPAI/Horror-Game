@@ -17,13 +17,13 @@ public class DoorController : MonoBehaviour
         GameEvents.GM.onDoorEnter += OnDoorOpen;
     }
 
-    private void OnDoorOpen(int id)
+    private void OnDoorOpen(int id, Entity iEntity)
     {
         if (id == this.id)
         {
-            pos = player.GetComponent<Transform>().position;
+            pos = iEntity.transform.position;
             pos.y += 15 * dir;
-            player.GetComponent<Transform>().position = pos;
+            iEntity.transform.position = pos;
         }
     }
 }

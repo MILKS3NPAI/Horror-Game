@@ -6,9 +6,9 @@ public class DoorTrigger : Useable
 {
 	public int id;
 
-	public override void Use(Player iPlayer)
+	public override void Use(Entity iEntity)
 	{
-		GameEvents.GM.DoorEnter(id);
+		GameEvents.GM.DoorEnter(id, iEntity);
 	}
 }
 

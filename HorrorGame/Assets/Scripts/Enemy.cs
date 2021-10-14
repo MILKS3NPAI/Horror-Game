@@ -76,9 +76,18 @@ public class Enemy : Entity
 		return iStimulus.range < Vector2.Distance(iStimulus.sourceLocation, iStimulus.receiverLocation);
 	}
 
+	public bool CanSeePlayer()
+	{
+		return !GameEngine.sPlayer.mHidden && Mathf.Abs(GameEngine.sPlayer.transform.position.y - transform.position.y) < 5;
+	}
+
 	void ChaseFixed()
 	{
-		MoveRelative(new Vector2(stimuli[0].sourceLocation.x - mPosition2D.x, 0));
+		MoveRelative(new Vector2(lastKnownLocation.x - mPosition2D.x, 0));
+		if (Vector2.Distance(lastKnownLocation, mPosition2D) < mMoveSpeed * Time.fixedDeltaTime && !CanSeePlayer())
+		{
+			mAIState = AIState.SEARCH;
+		}
 	}
 
 	void PatrolFixed()
@@ -99,4 +108,11 @@ public class Enemy : Entity
 		traversal.Traverse(this);
 	}
 
+	void SearchEnter()
+	{
+		Collider2D[] lResults = new Collider2D[2];
+		if (Physics2D.OverlapBox(lastKnownLocation, Vector2.one * mMoveSpeed * Time.fixedDeltaTime, 0f, ConstantResources.sUseableMask,lResults) > 0){
+
+		}
+	}
 }

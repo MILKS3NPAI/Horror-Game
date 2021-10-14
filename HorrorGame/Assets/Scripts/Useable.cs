@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Useable : MonoBehaviour
 {
-	public virtual void Use(Player iPlayer)
+	public virtual void Use(Entity iEntity)
 	{
 		
 	}

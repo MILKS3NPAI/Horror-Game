@@ -34,20 +34,25 @@ public class HidingSpot : Useable
 		}
 	}
 
-	public override void Use(Player iPlayer)
+	public override void Use(Entity iEntity)
 	{
-		if (iPlayer.mHidden)
+		if (!(iEntity is Player))
+		{
+			return;
+		}
+		Player lPlayer = (Player)iEntity;
+		if (lPlayer.mHidden)
 		{
 			hidingSpotCamera.depth = -2;
-			iPlayer.mHidden = false;
-			iPlayer.mPlayerControls._2Dmovement.Enable();
+			lPlayer.mHidden = false;
+			lPlayer.mPlayerControls._2Dmovement.Enable();
 		}
 		else
 		{
-			iPlayer.mPlayerControls._2Dmovement.Disable();
-			iPlayer.mHidden = true;
+			lPlayer.mPlayerControls._2Dmovement.Disable();
+			lPlayer.mHidden = true;
 			hidingSpotCamera.depth = 1;
-			iPlayer.transform.position = new Vector3(returnPosition.x, returnPosition.y, iPlayer.transform.position.z);
+			lPlayer.transform.position = new Vector3(returnPosition.x, returnPosition.y, lPlayer.transform.position.z);
 		}
 	}
 }

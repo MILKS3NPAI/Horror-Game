@@ -12,12 +12,12 @@ public class GameEvents : MonoBehaviour
         GM = this;
     }
 
-    public event Action<int> onDoorEnter;
-    public void DoorEnter(int id)
+    public event Action<int, Entity> onDoorEnter;
+    public void DoorEnter(int id, Entity iEntity)
     {
         if(onDoorEnter != null)
         {
-            onDoorEnter(id);
+            onDoorEnter(id, iEntity);
         }
     }
 }
