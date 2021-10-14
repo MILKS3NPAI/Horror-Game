@@ -12,26 +12,33 @@ public class CameraFollow : MonoBehaviour
 	Player player;
 	Vector3 desiredPosition;
 	public float distanceWeight = .25f;
+	[SerializeField]
+	float cameraYSensitivity = 4f;
+	bool movingY = false;
 
 	public void SetTarget(Transform iTarget)
 	{
 		followTarget = iTarget;
-		desiredPosition = iTarget.position;
+		desiredPosition = new Vector3(iTarget.position.x, transform.position.y, iTarget.position.z);
 	}
 
 	private void Awake()
 	{
 		player = GameObject.FindObjectOfType<Player>();
-		desiredPosition = transform.position;
 		if (followTarget == null)
 		{
 			followTarget = player.transform;
 		}
+		desiredPosition.y = transform.position.y;
 	}
 
 	private void Update()
 	{
-		desiredPosition = followTarget.position;
+		desiredPosition = new Vector3(followTarget.position.x, desiredPosition.y, followTarget.position.z);
+		if (Mathf.Abs(desiredPosition.y - followTarget.position.y) > cameraYSensitivity)
+		{
+			desiredPosition.y = followTarget.position.y;
+		}
 	}
 
 	private void LateUpdate()

@@ -33,8 +33,15 @@ public class Player : Entity
 			Dialogue lDialog = FindObjectOfType<Dialogue>();
 			if (lDialog != null) { dialogue = lDialog; }
 		}
-		enemy = FindObjectOfType<Enemy>().gameObject;
-
+		Enemy lEnemy = FindObjectOfType<Enemy>();
+		if (lEnemy != null)
+		{
+			enemy = FindObjectOfType<Enemy>().gameObject;
+		}
+		else
+		{
+			Debug.LogWarning("Enemy does not exist in scene, or could not be found.");
+		}
         flashlight = this.gameObject.transform.Find("Flashlight").gameObject;
         flTransform = flashlight.GetComponent<Transform>();
         animator = this.gameObject.GetComponentInChildren<Animator>();
