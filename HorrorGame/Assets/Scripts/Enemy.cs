@@ -31,7 +31,7 @@ public class Enemy : Entity
 	[SerializeField] float lethalRange = 2f;
 	int searchDir = 1;
 	public bool mCanSeePlayer { get { return (!GameEngine.sPlayer.mHidden) && Mathf.Abs(GameEngine.sPlayer.transform.position.y - transform.position.y) < playerDetectionRadius; } }
-
+	DoorTrigger suspectedDoor;
 
 	protected override void Awake()
 	{
@@ -154,6 +154,7 @@ public class Enemy : Entity
 	void SearchEnter()
 	{
 		Collider2D[] lResults = new Collider2D[2];
+		suspectedDoor = null;
 		if (Physics2D.OverlapBox(lastKnownLocation, Vector2.one * mMoveSpeed * Time.fixedDeltaTime, 0f, ConstantResources.sUseableMask, lResults) > 0)
 		{
 			foreach (Collider2D lCollider in lResults)
@@ -162,11 +163,7 @@ public class Enemy : Entity
 				{
 					return;
 				}
-				DoorTrigger lTrigger = lCollider.GetComponent<DoorTrigger>();
-				if (lTrigger != null)
-				{
-					lTrigger.Use(this);
-				}
+				suspectedDoor = lCollider.GetComponent<DoorTrigger>();
 			}
 		}
 		searchTimer = searchDuration;
@@ -181,11 +178,18 @@ public class Enemy : Entity
 		{
 			searchDir *= -1;
 		}
-		if (Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= playerDetectionRadius && mCanSeePlayer)
+		if (Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= playerDetectionRadius)
 		{
-			lastKnownLocation = GameEngine.sPlayer.mPosition2D;
-			mAIState = AIState.CHASE;
-			return;
+			if (mCanSeePlayer)
+			{
+				lastKnownLocation = GameEngine.sPlayer.mPosition2D;
+				mAIState = AIState.CHASE;
+				return;
+			}
+			else if(suspectedDoor != null)
+			{
+				suspectedDoor.Use(this);
+			}
 		}
 		MoveRelative(new Vector2(lMoveTarget - mPosition.x, 0));
 		searchTimer -= Time.fixedDeltaTime;
