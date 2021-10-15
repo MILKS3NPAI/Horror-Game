@@ -23,14 +23,11 @@ public class DoorController : MonoBehaviour
     {
         if (id == this.id)
         {
+            /*
             pos = iEntity.transform.position;
             pos.y += 15 * dir;
-            iEntity.transform.position = pos;
-
-            pos1 = main.GetComponent<Transform>().position;
-            pos1.y += 15 * dir;
-            main.GetComponent<Transform>().position = pos1;
-            main.GetComponent<CameraFollow>().enabled = true;
+            iEntity.transform.position = pos;*/
+            iEntity.transform.position += Vector3.up * (15 * dir);
         }
     }
 }
