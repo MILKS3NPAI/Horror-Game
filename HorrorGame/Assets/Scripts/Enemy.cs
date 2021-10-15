@@ -112,7 +112,13 @@ public class Enemy : Entity
 	{
 		Collider2D[] lResults = new Collider2D[2];
 		if (Physics2D.OverlapBox(lastKnownLocation, Vector2.one * mMoveSpeed * Time.fixedDeltaTime, 0f, ConstantResources.sUseableMask,lResults) > 0){
-
+			foreach (Collider2D lCollider in lResults) {
+				DoorTrigger lTrigger = lCollider.GetComponent<DoorTrigger>();
+				if (lTrigger != null)
+				{
+					lTrigger.Use(this);
+				}
+			}
 		}
 	}
 }
