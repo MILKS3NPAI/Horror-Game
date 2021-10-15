@@ -45,14 +45,15 @@ public class HidingSpot : Useable
 		{
 			hidingSpotCamera.depth = -2;
 			lPlayer.mHidden = false;
-			lPlayer.mPlayerControls._2Dmovement.Enable();
+			lPlayer.mMovementDisabled = false;
 		}
 		else
 		{
-			lPlayer.mPlayerControls._2Dmovement.Disable();
 			lPlayer.mHidden = true;
 			hidingSpotCamera.depth = 1;
 			lPlayer.transform.position = new Vector3(returnPosition.x, returnPosition.y, lPlayer.transform.position.z);
+			lPlayer.ZeroMovement();
+			lPlayer.mMovementDisabled = true;
 		}
 	}
 }

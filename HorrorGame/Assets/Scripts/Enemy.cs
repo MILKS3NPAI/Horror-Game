@@ -22,6 +22,16 @@ public class Enemy : Entity
 	int patrolTarget = 0;
 	Vector2 moveTarget = new Vector2();
 	public ComplexTraversal traversal;
+	[SerializeField] float playerDetectionRadius = 5f;
+	int searchStage = 0;
+	[SerializeField] float searchRadius = 5f;
+	[SerializeField] float searchDuration = 10f;
+	float searchTimer = 10f;
+	[SerializeField] bool lethal = true;
+	[SerializeField] float lethalRange = 2f;
+	int searchDir = 1;
+	public bool mCanSeePlayer { get { return (!GameEngine.sPlayer.mHidden) && Mathf.Abs(GameEngine.sPlayer.transform.position.y - transform.position.y) < playerDetectionRadius; } }
+
 
 	protected override void Awake()
 	{
@@ -36,6 +46,8 @@ public class Enemy : Entity
 		stateFixeds[(int)AIState.PATROL] = PatrolFixed;
 		stateFixeds[(int)AIState.CHASE] = ChaseFixed;
 		stateFixeds[(int)AIState.COMPLEX_TRAVERSAL] = TraverseFixed;
+		stateFixeds[(int)AIState.SEARCH] = SearchFixed;
+		stateEnters[(int)AIState.SEARCH] = SearchEnter;
 		ConstantResources.Initialize();
 		mGroundFilter = ConstantResources.sEnemyGroundMask;
 	}
@@ -49,10 +61,22 @@ public class Enemy : Entity
 	{
 		stateUpdates[(int)mAIState].Invoke();
 	}
-
+	protected override void OnDrawGizmos()
+	{
+		base.OnDrawGizmos();
+		if (Application.isPlaying)
+		{
+			Gizmos.color = Color.yellow;
+			Gizmos.DrawWireSphere(lastKnownLocation, .25f);
+		}
+	}
 	protected override void FixedUpdate()
 	{
 		stateFixeds[(int)mAIState].Invoke();
+		if (!GameEngine.sPlayer.mHidden && Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= lethalRange)
+		{
+			GameEngine.sPlayer.Kill();
+		}
 		base.FixedUpdate();
 	}
 
@@ -76,24 +100,38 @@ public class Enemy : Entity
 		return iStimulus.range < Vector2.Distance(iStimulus.sourceLocation, iStimulus.receiverLocation);
 	}
 
-	public bool CanSeePlayer()
-	{
-		return !GameEngine.sPlayer.mHidden && Mathf.Abs(GameEngine.sPlayer.transform.position.y - transform.position.y) < 5;
-	}
-
 	void ChaseFixed()
 	{
 		MoveRelative(new Vector2(lastKnownLocation.x - mPosition2D.x, 0));
-		if (Vector2.Distance(lastKnownLocation, mPosition2D) < mMoveSpeed * Time.fixedDeltaTime && !CanSeePlayer())
+		if (Mathf.Abs(lastKnownLocation.x - mPosition.x) <= mMoveSpeed * Time.fixedDeltaTime)
 		{
-			mAIState = AIState.SEARCH;
+			if (!mCanSeePlayer)
+			{
+				mAIState = AIState.SEARCH;
+			}
+			else
+			{
+				mAIState = AIState.PATROL;
+			}
+		}
+		else if (Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= playerDetectionRadius)
+		{
+			if (mCanSeePlayer)
+			{
+				lastKnownLocation = GameEngine.sPlayer.mPosition2D;
+			}
+			else
+			{
+				mAIState = AIState.SEARCH;
+			}
 		}
 	}
 
 	void PatrolFixed()
 	{
 		moveTarget = new Vector2(patrolPoints[patrolTarget].position.x, patrolPoints[patrolTarget].position.y);
-		if (Mathf.Abs(moveTarget.x - mPosition2D.x) < mMoveSpeed * Time.fixedDeltaTime){
+		if (Mathf.Abs(moveTarget.x - mPosition.x) <= mMoveSpeed * Time.fixedDeltaTime)
+		{
 			patrolTarget += patrolDir;
 			if (patrolTarget >= patrolPoints.Length - 1 || patrolTarget == 0)
 			{
@@ -101,6 +139,11 @@ public class Enemy : Entity
 			}
 		}
 		MoveRelative(new Vector2(patrolPoints[patrolTarget].position.x - mPosition.x, 0));
+		if (Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= playerDetectionRadius && mCanSeePlayer)
+		{
+			mAIState = AIState.CHASE;
+			lastKnownLocation = GameEngine.sPlayer.mPosition2D;
+		}
 	}
 
 	void TraverseFixed()
@@ -111,14 +154,44 @@ public class Enemy : Entity
 	void SearchEnter()
 	{
 		Collider2D[] lResults = new Collider2D[2];
-		if (Physics2D.OverlapBox(lastKnownLocation, Vector2.one * mMoveSpeed * Time.fixedDeltaTime, 0f, ConstantResources.sUseableMask,lResults) > 0){
-			foreach (Collider2D lCollider in lResults) {
+		if (Physics2D.OverlapBox(lastKnownLocation, Vector2.one * mMoveSpeed * Time.fixedDeltaTime, 0f, ConstantResources.sUseableMask, lResults) > 0)
+		{
+			foreach (Collider2D lCollider in lResults)
+			{
+				if (lCollider == null)
+				{
+					return;
+				}
 				DoorTrigger lTrigger = lCollider.GetComponent<DoorTrigger>();
 				if (lTrigger != null)
 				{
 					lTrigger.Use(this);
 				}
 			}
+		}
+		searchTimer = searchDuration;
+		searchStage = 0;
+		searchDir = previousEntityMovement.x > 0 ? 1 : -1;
+	}
+
+	void SearchFixed()
+	{
+		float lMoveTarget = lastKnownLocation.x + (searchDir * (playerDetectionRadius * .75f));
+		if (Mathf.Abs(lMoveTarget - mPosition.x) <= mMoveSpeed * Time.fixedDeltaTime)
+		{
+			searchDir *= -1;
+		}
+		if (Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= playerDetectionRadius && mCanSeePlayer)
+		{
+			lastKnownLocation = GameEngine.sPlayer.mPosition2D;
+			mAIState = AIState.CHASE;
+			return;
+		}
+		MoveRelative(new Vector2(lMoveTarget - mPosition.x, 0));
+		searchTimer -= Time.fixedDeltaTime;
+		if (searchTimer <= 0)
+		{
+			mAIState = AIState.PATROL;
 		}
 	}
 }

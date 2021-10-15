@@ -57,6 +57,15 @@ public class Entity : MonoBehaviour
 	public Vector2 mGroundDetectionUnderfootPoint { get { return new Vector2((mPosition2D + collider.offset).x, mGroundDetectionPoint.y + (groundDistance - (velocity.y * Time.fixedDeltaTime))); } }
 	public float mMoveSpeed { get { return moveSpeed; } }
 	public bool mGroundDetected { get { return groundDetected; } }
+	public bool mMovementDisabled { get; set; }
+
+	public void ZeroMovement()
+	{
+		entityMovement = Vector2.zero;
+		physicsMovement = Vector2.zero;
+		previousEntityMovement = Vector2.zero;
+		previousPhysicsMovement = Vector2.zero;
+	}
 
 	protected virtual void Awake()
 	{
@@ -88,7 +97,7 @@ public class Entity : MonoBehaviour
 		}
 	}
 
-	private void OnDrawGizmos()
+	protected virtual void OnDrawGizmos()
 	{
 		if (Application.isPlaying)
 		{
@@ -208,6 +217,10 @@ public class Entity : MonoBehaviour
 
 	public void MoveRelative(Vector2 iMovement)
 	{
+		if (mMovementDisabled)
+		{
+			return;
+		}
 		Vector2 lMovement = new Vector2(iMovement.x * moveSpeed, 0);
 		if (iMovement.y < 0)
 		{
@@ -222,6 +235,10 @@ public class Entity : MonoBehaviour
 
 	public void MoveAbsolute(Vector2 iMovement)
 	{
+		if (mMovementDisabled)
+		{
+			return;
+		}
 		entityMovement = iMovement;
 	}
 }
