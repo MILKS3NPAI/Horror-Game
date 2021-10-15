@@ -38,7 +38,7 @@ public class CameraFollow : MonoBehaviour
 		if (Mathf.Abs(desiredPosition.y - followTarget.position.y) > cameraYSensitivity)
 		{
 			desiredPosition.y = followTarget.position.y;
-			transform.position = new Vector3(transform.position.x, desiredPosition.y, transform.position.z);
+			transform.position = new Vector3(transform.position.x, desiredPosition.y + offset.y, transform.position.z);
 		}
 	}
 
