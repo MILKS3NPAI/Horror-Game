@@ -7,11 +7,9 @@ public class DoorController : MonoBehaviour
 {
     private PlayerControls playerControls;
     [SerializeField] private float dir; //1=up -1=down
-    [SerializeField] private Camera main;
     public int id;
     GameObject player;
     Vector3 pos;
-    Vector3 pos1;
 
     void Start()
     {
@@ -19,20 +17,13 @@ public class DoorController : MonoBehaviour
         GameEvents.GM.onDoorEnter += OnDoorOpen;
     }
 
-    private void OnDoorOpen(int id)
+    private void OnDoorOpen(int id, Entity iEntity)
     {
         if (id == this.id)
         {
-            main.GetComponent<CameraFollow>().enabled = false;
-            pos = player.GetComponent<Transform>().position;
+            pos = iEntity.transform.position;
             pos.y += 15 * dir;
-            player.GetComponent<Transform>().position = pos;
-
-            
-            pos1 = main.GetComponent<Transform>().position;
-            pos1.y += 15 * dir;
-            main.GetComponent<Transform>().position = pos1;
-            main.GetComponent<CameraFollow>().enabled = true;
+            iEntity.transform.position = pos;
         }
     }
 }

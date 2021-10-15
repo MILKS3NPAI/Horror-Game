@@ -27,6 +27,7 @@ public class ConstantResources
 		sPlayerGroundMask.useLayerMask = true;
 		sEnemyGroundMask.useLayerMask = true;
 		sUseableMask.useLayerMask = true;
+		sUseableMask.useTriggers = true;
 	}
 	public static Array EnumArray<T>()
 	{
