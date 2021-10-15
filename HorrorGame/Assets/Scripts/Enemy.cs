@@ -36,6 +36,7 @@ public class Enemy : Entity
 	Transform nearestHidePoint;
 	[SerializeField] float stateTime = 0f;
 	[SerializeField] float inactiveTime = 30f;
+	FlashlightController flashlight;
 
 	protected override void Awake()
 	{
@@ -52,10 +53,13 @@ public class Enemy : Entity
 		stateFixeds[(int)AIState.COMPLEX_TRAVERSAL] = TraverseFixed;
 		stateFixeds[(int)AIState.SEARCH] = SearchFixed;
 		stateFixeds[(int)AIState.INACTIVE] = InactiveFixed;
+		stateEnters[(int)AIState.CHASE] = ChaseEnter;
 		stateEnters[(int)AIState.SEARCH] = SearchEnter;
 		stateEnters[(int)AIState.INACTIVE] = InactiveEnter;
+		stateExits[(int)AIState.CHASE] = ChaseExit;
 		ConstantResources.Initialize();
 		mGroundFilter = ConstantResources.sEnemyGroundMask;
+		flashlight = FindObjectOfType<FlashlightController>();
 	}
 
 	void DoNothing()
@@ -85,6 +89,7 @@ public class Enemy : Entity
 			GameEngine.sPlayer.Kill();
 		}
 		base.FixedUpdate();
+		flashlight.NarrowCone(Mathf.Max(playerDetectionRadius - Vector2.Distance(mPosition2D, GameEngine.sPlayer.mPosition2D), 1));
 	}
 
 	public void ReceiveStimulus(Stimulus iStimulus)
@@ -243,5 +248,13 @@ public class Enemy : Entity
 			transform.position = patrolPoints[0].position;
 			mAIState = AIState.PATROL;
 		}
+	}
+	void ChaseEnter()
+	{
+	}
+
+	void ChaseExit()
+	{
+		
 	}
 }
