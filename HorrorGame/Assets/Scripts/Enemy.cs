@@ -16,7 +16,7 @@ public class Enemy : Entity
 	[SerializeField]
 	private AIState _aiState;
 	public AIState mPreviousAIState { get; private set; }
-	public AIState mAIState { get { return _aiState; } set { if (value == _aiState) return; mPreviousAIState = _aiState; stateExits[(int)_aiState].Invoke(); _aiState = value; stateEnters[(int)_aiState].Invoke(); } }
+	public AIState mAIState { get { return _aiState; } set { if (value == _aiState) return; mPreviousAIState = _aiState; stateExits[(int)_aiState].Invoke(); _aiState = value; stateEnters[(int)_aiState].Invoke(); stateTime = 0f; } }
 	public Transform[] patrolPoints = new Transform[0];
 	int patrolDir = 1;
 	int patrolTarget = 0;
@@ -32,6 +32,10 @@ public class Enemy : Entity
 	int searchDir = 1;
 	public bool mCanSeePlayer { get { return (!GameEngine.sPlayer.mHidden) && Mathf.Abs(GameEngine.sPlayer.transform.position.y - transform.position.y) < playerDetectionRadius; } }
 	DoorTrigger suspectedDoor;
+	[SerializeField] Transform[] hidePoints = new Transform[0];
+	Transform nearestHidePoint;
+	[SerializeField] float stateTime = 0f;
+	[SerializeField] float inactiveTime = 30f;
 
 	protected override void Awake()
 	{
@@ -47,7 +51,9 @@ public class Enemy : Entity
 		stateFixeds[(int)AIState.CHASE] = ChaseFixed;
 		stateFixeds[(int)AIState.COMPLEX_TRAVERSAL] = TraverseFixed;
 		stateFixeds[(int)AIState.SEARCH] = SearchFixed;
+		stateFixeds[(int)AIState.INACTIVE] = InactiveFixed;
 		stateEnters[(int)AIState.SEARCH] = SearchEnter;
+		stateEnters[(int)AIState.INACTIVE] = InactiveEnter;
 		ConstantResources.Initialize();
 		mGroundFilter = ConstantResources.sEnemyGroundMask;
 	}
@@ -60,6 +66,7 @@ public class Enemy : Entity
 	protected override void Update()
 	{
 		stateUpdates[(int)mAIState].Invoke();
+		stateTime += Time.deltaTime;
 	}
 	protected override void OnDrawGizmos()
 	{
@@ -186,7 +193,7 @@ public class Enemy : Entity
 				mAIState = AIState.CHASE;
 				return;
 			}
-			else if(suspectedDoor != null)
+			else if (suspectedDoor != null)
 			{
 				suspectedDoor.Use(this);
 			}
@@ -195,6 +202,45 @@ public class Enemy : Entity
 		searchTimer -= Time.fixedDeltaTime;
 		if (searchTimer <= 0)
 		{
+			mAIState = AIState.INACTIVE;
+		}
+	}
+
+	void InactiveEnter()
+	{
+		nearestHidePoint = null;
+		foreach (Transform lPoint in hidePoints)
+		{
+			if (Mathf.Abs(lPoint.position.y - mPosition.y) < 5)
+			{
+				nearestHidePoint = lPoint;
+				break;
+			}
+		}
+	}
+
+	void InactiveFixed()
+	{
+		if (nearestHidePoint == null)
+		{
+			MoveRelative(new Vector2(mPosition2D.x - GameEngine.sPlayer.mPosition2D.x,0));
+			if (Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) > Camera.main.orthographicSize * 2f)
+			{
+				mVisible = false;
+			}
+		}
+		else
+		{
+			MoveRelative(new Vector2(nearestHidePoint.position.x, mPosition.y) - mPosition2D);
+			if (Mathf.Abs(nearestHidePoint.position.x - mPosition.x) <= mMoveSpeed * Time.fixedDeltaTime)
+			{
+				mVisible = false;
+			}
+		}
+		if (stateTime > inactiveTime)
+		{
+			mVisible = true;
+			transform.position = patrolPoints[0].position;
 			mAIState = AIState.PATROL;
 		}
 	}

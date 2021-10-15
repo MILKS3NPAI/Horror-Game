@@ -58,14 +58,8 @@ public class Entity : MonoBehaviour
 	public float mMoveSpeed { get { return moveSpeed; } }
 	public bool mGroundDetected { get { return groundDetected; } }
 	public bool mMovementDisabled { get; set; }
-
-	public void ZeroMovement()
-	{
-		entityMovement = Vector2.zero;
-		physicsMovement = Vector2.zero;
-		previousEntityMovement = Vector2.zero;
-		previousPhysicsMovement = Vector2.zero;
-	}
+	public bool mVisible { get { return sprite.enabled; } set { sprite.enabled = value; mMovementDisabled = !sprite.enabled; collider.isTrigger = !sprite.enabled; } }
+	SpriteRenderer sprite;
 
 	protected virtual void Awake()
 	{
@@ -81,6 +75,23 @@ public class Entity : MonoBehaviour
 		collider = GetComponent<BoxCollider2D>();
 		physicsActions = new UnityAction[] { FloorMissAction, FloorHitAction };
 		moveActions = new UnityAction<Vector2>[] { MoveThroughAir, MoveAlongFloor };
+		sprite = GetComponent<SpriteRenderer>();
+		if (sprite == null)
+		{
+			sprite = GetComponentInChildren<SpriteRenderer>();
+			if (sprite == null)
+			{
+				Debug.LogError("Could not locate sprite renderer for this game object. Is it missing?", gameObject);
+			}
+		}
+	}
+
+	public void ZeroMovement()
+	{
+		entityMovement = Vector2.zero;
+		physicsMovement = Vector2.zero;
+		previousEntityMovement = Vector2.zero;
+		previousPhysicsMovement = Vector2.zero;
 	}
 
 	protected virtual void Start()
