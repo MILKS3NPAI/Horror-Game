@@ -27,7 +27,7 @@ public class DoorController : MonoBehaviour
             pos = iEntity.transform.position;
             pos.y += 15 * dir;
             iEntity.transform.position = pos;*/
-            iEntity.transform.position += Vector3.up * (15 * dir);
+            iEntity.transform.position += Vector3.up * (13.5f * dir);
         }
     }
 }
