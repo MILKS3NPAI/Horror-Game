@@ -5,6 +5,7 @@ using UnityEngine;
 public class HidingSpot : Useable
 {
 	public Camera hidingSpotCamera;
+	[SerializeField] string spotType;
 	Transform returnPoint;
 	Vector3 returnPosition;
 	Player mPlayer { get { return GameEngine.sPlayer; } }
@@ -36,6 +37,16 @@ public class HidingSpot : Useable
 
 	public override void Use(Entity iEntity)
 	{
+		if (spotType.Equals("1"))
+        {
+			FindObjectOfType<AudioManager>().gameObject.transform.position = transform.position;
+			AudioManager.PlaySound("Hide1");
+        }
+		else if (spotType.Equals("2"))
+        {
+			FindObjectOfType<AudioManager>().gameObject.transform.position = transform.position;
+			AudioManager.PlaySound("Hide2");
+        }
 		if (!(iEntity is Player))
 		{
 			return;

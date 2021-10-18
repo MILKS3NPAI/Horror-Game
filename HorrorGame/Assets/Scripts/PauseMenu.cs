@@ -25,7 +25,7 @@ public class PauseMenu : MonoBehaviour
         if (!notFirstLoad)
         {
             notFirstLoad = true;
-            volume = 0.75f;
+            volume = 0.5f;
         }
         slider.value = volume;
         // += _ means blank, some inputs can return a value, you would do   += var => Function(var);
