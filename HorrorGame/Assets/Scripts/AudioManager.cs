@@ -86,4 +86,8 @@ public class AudioManager : MonoBehaviour
             s.source.clip = newSound;
         }
     }
+    public static Sound GetSound(string name)
+    {
+        return Array.Find(AM.sounds, sound => sound.name == name);
+    }
 }
