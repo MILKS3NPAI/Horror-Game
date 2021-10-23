@@ -23,7 +23,7 @@ public class DoorController : MonoBehaviour
     {
         if (id == this.id)
         {
-            FindObjectOfType<AudioManager>().gameObject.transform.position = transform.position;
+            //FindObjectOfType<AudioManager>().gameObject.transform.position = transform.position;
             AudioManager.PlaySound("Door1");
             /*
             pos = iEntity.transform.position;

@@ -39,12 +39,12 @@ public class HidingSpot : Useable
 	{
 		if (spotType.Equals("1"))
         {
-			FindObjectOfType<AudioManager>().gameObject.transform.position = transform.position;
+			//FindObjectOfType<AudioManager>().gameObject.transform.position = transform.position;
 			AudioManager.PlaySound("Hide1");
         }
 		else if (spotType.Equals("2"))
         {
-			FindObjectOfType<AudioManager>().gameObject.transform.position = transform.position;
+			//FindObjectOfType<AudioManager>().gameObject.transform.position = transform.position;
 			AudioManager.PlaySound("Hide2");
         }
 		if (!(iEntity is Player))

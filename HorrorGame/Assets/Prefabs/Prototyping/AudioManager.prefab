@@ -52,7 +52,7 @@ MonoBehaviour:
   - clip: {fileID: 8300000, guid: 1211d890f53e60a4181245f8d72b8887, type: 3}
     source: {fileID: 0}
     canLoop: 1
-    volume: 1
+    volume: 0.5
     name: Music2
   - clip: {fileID: 8300000, guid: 6c67a50a43aaff94a807ad2816e367e7, type: 3}
     source: {fileID: 0}
@@ -62,5 +62,20 @@ MonoBehaviour:
   - clip: {fileID: 8300000, guid: 8471518388fd93f4b944f80f309b2ed2, type: 3}
     source: {fileID: 0}
     canLoop: 1
-    volume: 1
+    volume: 0.5
     name: Step2
+  - clip: {fileID: 8300000, guid: f95a0c384f78c8e48ae748fb346e508c, type: 3}
+    source: {fileID: 0}
+    canLoop: 0
+    volume: 0.5
+    name: Hide1
+  - clip: {fileID: 8300000, guid: 71358d80793fd4e4f8aa2be815da44ff, type: 3}
+    source: {fileID: 0}
+    canLoop: 0
+    volume: 0.5
+    name: Hide2
+  - clip: {fileID: 8300000, guid: 4278d65c1cbb3e64d8bea410b6619a59, type: 3}
+    source: {fileID: 0}
+    canLoop: 0
+    volume: 0.5
+    name: Door1
