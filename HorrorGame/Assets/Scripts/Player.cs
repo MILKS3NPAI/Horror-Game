@@ -128,21 +128,12 @@ public class Player : Entity
 		direction = iDirection;
 		if (iDirection != 0 && mGroundDetected)
 		{
-			if (PlayerRoom().Equals("right"))
-			{
-				AudioManager.PlaySound("Step1");
-				AudioManager.StopSound("Step2");
-			}
-			else if (PlayerRoom().Equals("left"))
-			{
-				AudioManager.StopSound("Step1");
-				AudioManager.PlaySound("Step2");
-			}
+			AudioManager.PlaySound("Step1");
 		}
 		else
 		{
 			AudioManager.StopSound("Step1");
-			AudioManager.StopSound("Step2");
+
 		}
 	}
 

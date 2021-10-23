@@ -77,4 +77,13 @@ public class AudioManager : MonoBehaviour
             s.volume = volume;
         }
     }
+
+    public static void SetSound(string nName, AudioClip newSound)
+    {
+        Sound s = Array.Find(AM.sounds, sound => sound.name == nName);
+        if (s != null)
+        {
+            s.source.clip = newSound;
+        }
+    }
 }
