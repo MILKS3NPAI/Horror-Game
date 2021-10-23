@@ -126,16 +126,16 @@ public class Player : Entity
 	private void Move(float iDirection)
 	{
 		direction = iDirection;
-		if (iDirection != 0 && mGroundDetected)
+ 
+		if (direction != 0 && mGroundDetected && !AudioManager.GetSound("Step1").source.isPlaying)
 		{
 			AudioManager.PlaySound("Step1");
 		}
-		else
-		{
-			AudioManager.StopSound("Step1");
-
-		}
-	}
+        else
+        {
+            AudioManager.StopSound("Step1");
+        }
+    }
 
 	void Use()
 	{
@@ -201,4 +201,10 @@ public class Player : Entity
 	{
 		Debug.Log("I is dead", gameObject);
 	}
+
+
+    IEnumerator wait()
+    {
+        yield return new WaitForSeconds(0.2f);
+    }
 }
