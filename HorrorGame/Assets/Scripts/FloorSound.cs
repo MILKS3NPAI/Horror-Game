@@ -14,7 +14,7 @@ public class FloorSound : MonoBehaviour
         if(collision.gameObject.CompareTag("Player"))
         {
             AudioManager.SetSound(soundName, newSound);
-            Debug.Log("Audio Switched");
+            AudioManager.PlaySound("Step1");
         }
     }
 }
