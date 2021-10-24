@@ -117,7 +117,6 @@ public class Enemy : Entity
 		}
 		base.FixedUpdate();
 		flashlight.NarrowCone(Mathf.Max(playerDetectionRadius - Vector2.Distance(mPosition2D, GameEngine.sPlayer.mPosition2D), 1));
-		PlayWarning(mAIState != AIState.INACTIVE);
 	}
 
 	public void ReceiveStimulus(Stimulus iStimulus)
@@ -253,6 +252,7 @@ public class Enemy : Entity
 				break;
 			}
 		}
+		PlayWarning(false);
 	}
 
 	void InactiveFixed()

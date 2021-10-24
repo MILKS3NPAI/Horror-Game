@@ -79,3 +79,8 @@ MonoBehaviour:
     canLoop: 0
     volume: 0.5
     name: Door1
+  - clip: {fileID: 8300000, guid: 125e960137e685740849a7221ea045a1, type: 3}
+    source: {fileID: 0}
+    canLoop: 0
+    volume: 0.5
+    name: WarningSound
