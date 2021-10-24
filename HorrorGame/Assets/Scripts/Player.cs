@@ -196,8 +196,26 @@ public class Player : Entity
 			return "left";
 		}
 	}
+	public void OnTriggerEnter2D(Collider2D collision)
+	{
+		if (collision.transform.parent.gameObject.name.Equals("Dining Room"))
+		{
+			Animator[] anim = FindObjectsOfType<Animator>();
+			for (int i = 0; i < anim.Length; i++)
+            {
+				if (anim[i].gameObject.transform.parent.gameObject.name.Equals("Dining Room"))
+                {
+					anim[i].SetBool("PlayerInDiningRoom", true);
+                }
+            }
+		}
+		else
+		{
+			//Debug.Log("Player hit " + collision);
+		}
+	}
 
-	public void Kill()
+    public void Kill()
 	{
 		Debug.Log("I is dead", gameObject);
 	}
