@@ -47,12 +47,12 @@ public class Entity : MonoBehaviour
 	[SerializeField]
 	ContactFilter2D _groundFilter;
 	public ContactFilter2D mGroundFilter { get { return _groundFilter; } protected set { _groundFilter = value; } }
-	public Vector2 mPosition2D { get { return new Vector2(transform.position.x, transform.position.y); } }
-	public Vector2 mPosition { get { return transform.position; } }
+	public Vector2 mPosition2D { get { return new Vector2(transform.position.x, transform.position.y); } set { transform.position = new Vector3(value.x, value.y, transform.position.z); } }
+	public Vector2 mPosition { get { return transform.position; } set { transform.position = value; } }
 	bool mGrounded { get { return groundDetected && (velocity.y <= 0); } }
 	public Vector2 mGroundDetectionOrigin { get { return (mPosition2D + collider.offset) + ((Vector2.down * collider.size.y * .5f * transform.localScale.y) + (Vector2.up * stepHeight)); } }
 	public Vector2 mGroundDetectionBoxDimensions { get { return new Vector2(collider.size.x, collider.size.y * .5f) * transform.localScale.y; } }
-	public float mGroundDetectionDistance { get { return (Mathf.Max(-velocity.y, minDist) * groundDistance *  Time.fixedDeltaTime) + stepHeight + groundRayDistance; } }
+	public float mGroundDetectionDistance { get { return (Mathf.Max(-velocity.y, minDist) * groundDistance * Time.fixedDeltaTime) + stepHeight + groundRayDistance; } }
 	public Vector2 mGroundDetectionPoint { get; protected set; }
 	public Vector2 mGroundDetectionUnderfootPoint { get { return new Vector2((mPosition2D + collider.offset).x, mGroundDetectionPoint.y + (groundDistance - (velocity.y * Time.fixedDeltaTime))); } }
 	public float mMoveSpeed { get { return moveSpeed; } }
@@ -168,7 +168,7 @@ public class Entity : MonoBehaviour
 				entityMovement = (Vector2.ClampMagnitude(lSlope, 1.0f) * moveSpeed);
 				body.MovePosition(mGroundDetectionUnderfootPoint + ((entityMovement + physicsMovement) * Time.fixedDeltaTime) +
 					(Vector2.up * mGroundDetectionBoxDimensions.y));// + (totalMovement * Time.fixedDeltaTime));
-																		  //body.MovePosition(mGroundDetectionUnderfootPoint + ((playerMovement + physicsMovement) * Time.fixedDeltaTime) + (Vector2.up * mGroundDetectionBoxDimensions.y * .5f));// + (totalMovement * Time.fixedDeltaTime));
+																	//body.MovePosition(mGroundDetectionUnderfootPoint + ((playerMovement + physicsMovement) * Time.fixedDeltaTime) + (Vector2.up * mGroundDetectionBoxDimensions.y * .5f));// + (totalMovement * Time.fixedDeltaTime));
 				if (Vector2.Dot(lHit.normal, Vector2.up) > maxSlope)
 				{
 					velocity = Vector2.zero;
