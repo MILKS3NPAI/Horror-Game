@@ -167,7 +167,7 @@ public class Enemy : Entity
 
 	void PatrolFixed()
 	{
-		moveTarget = new Vector2(patrolRoutes[currentRoute].GetChild(patrolTarget).position.x, patrolRoutes[currentRoute].GetChild(patrolTarget).position.y);
+		moveTarget = new Vector2(mPatrolRoute.GetChild(patrolTarget).position.x, mPatrolRoute.GetChild(patrolTarget).position.y);
 		if (Mathf.Abs(moveTarget.x - mPosition.x) <= mMoveSpeed * Time.fixedDeltaTime)
 		{
 			patrolTarget += patrolDir;
@@ -176,7 +176,7 @@ public class Enemy : Entity
 				patrolDir *= -1;
 			}
 		}
-		MoveRelative(new Vector2(patrolRoutes[patrolTarget].position.x - mPosition.x, 0));
+		MoveRelative(new Vector2(mPatrolRoute.GetChild(patrolTarget).position.x - mPosition.x, 0));
 		if (Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= playerDetectionRadius && mCanSeePlayer)
 		{
 			mAIState = AIState.CHASE;
