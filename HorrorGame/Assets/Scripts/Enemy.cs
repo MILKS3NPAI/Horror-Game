@@ -23,6 +23,8 @@ public class Enemy : Entity
 	Vector2 moveTarget = new Vector2();
 	public ComplexTraversal traversal;
 	[SerializeField] float playerDetectionRadius = 5f;
+	[SerializeField] float warningSoundRadius = 7f;
+	[SerializeField] float warningSoundPan = .8f;
 	int searchStage = 0;
 	[SerializeField] float searchRadius = 5f;
 	[SerializeField] float searchDuration = 10f;
@@ -37,6 +39,9 @@ public class Enemy : Entity
 	[SerializeField] float stateTime = 0f;
 	[SerializeField] float inactiveTime = 30f;
 	FlashlightController flashlight;
+	const string warningSoundString = "WarningSound";
+	Sound warningSound;
+	Player player;
 
 	protected override void Awake()
 	{
@@ -60,6 +65,17 @@ public class Enemy : Entity
 		ConstantResources.Initialize();
 		mGroundFilter = ConstantResources.sEnemyGroundMask;
 		flashlight = FindObjectOfType<FlashlightController>();
+		player = GameEngine.sPlayer;
+	}
+
+	protected override void Start()
+	{
+		base.Start();
+		warningSound = AudioManager.GetSound(warningSoundString);
+		if (warningSound == null)
+		{
+			Debug.LogError("No warning sound set.");
+		}
 	}
 
 	void DoNothing()
@@ -90,6 +106,7 @@ public class Enemy : Entity
 		}
 		base.FixedUpdate();
 		flashlight.NarrowCone(Mathf.Max(playerDetectionRadius - Vector2.Distance(mPosition2D, GameEngine.sPlayer.mPosition2D), 1));
+		PlayWarning();
 	}
 
 	public void ReceiveStimulus(Stimulus iStimulus)
@@ -137,6 +154,7 @@ public class Enemy : Entity
 				mAIState = AIState.SEARCH;
 			}
 		}
+		PlayWarning();
 	}
 
 	void PatrolFixed()
@@ -156,6 +174,7 @@ public class Enemy : Entity
 			mAIState = AIState.CHASE;
 			lastKnownLocation = GameEngine.sPlayer.mPosition2D;
 		}
+		PlayWarning(mCanSeePlayer);
 	}
 
 	void TraverseFixed()
@@ -209,6 +228,7 @@ public class Enemy : Entity
 		{
 			mAIState = AIState.INACTIVE;
 		}
+		PlayWarning();
 	}
 
 	void InactiveEnter()
@@ -228,7 +248,7 @@ public class Enemy : Entity
 	{
 		if (nearestHidePoint == null)
 		{
-			MoveRelative(new Vector2(mPosition2D.x - GameEngine.sPlayer.mPosition2D.x,0));
+			MoveRelative(new Vector2(mPosition2D.x - GameEngine.sPlayer.mPosition2D.x, 0));
 			if (Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) > Camera.main.orthographicSize * 2f)
 			{
 				mVisible = false;
@@ -255,6 +275,23 @@ public class Enemy : Entity
 
 	void ChaseExit()
 	{
-		
+
+	}
+
+	void PlayWarning(bool iPlay = true)
+	{
+		if (warningSound == null)
+		{
+			return;
+		}
+		if (iPlay && Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= warningSoundRadius)
+		{
+			audioSource.volume = 1f / Mathf.Max((float)Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x), .001f);
+			audioSource.panStereo = ((player.mPosition.x < mPosition.x) ? warningSoundPan : -warningSoundPan) * Mathf.Min(Vector2.Distance(mPosition2D, player.mPosition), 1f);
+		}
+		else
+		{
+			audioSource.volume = 0f;
+		}
 	}
 }
