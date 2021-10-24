@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(AudioSource))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class Entity : MonoBehaviour
 {
 	//The velocity given when a character jumps.
@@ -60,7 +60,6 @@ public class Entity : MonoBehaviour
 	public bool mMovementDisabled { get; set; }
 	public bool mVisible { get { return sprite.enabled; } set { sprite.enabled = value; mMovementDisabled = !sprite.enabled; collider.isTrigger = !sprite.enabled; } }
 	SpriteRenderer sprite;
-	protected AudioSource audioSource;
 
 	protected virtual void Awake()
 	{
@@ -84,11 +83,6 @@ public class Entity : MonoBehaviour
 			{
 				Debug.LogError("Could not locate sprite renderer for this game object. Is it missing?", gameObject);
 			}
-		}
-		audioSource = GetComponent<AudioSource>();
-		if (audioSource == null)
-		{
-			audioSource = gameObject.AddComponent<AudioSource>();
 		}
 	}
 
