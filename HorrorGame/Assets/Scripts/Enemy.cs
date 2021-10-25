@@ -90,6 +90,7 @@ public class Enemy : Entity
 			warningSoundSource = warningSound.source;
 			//warningSoundSource.volume = 0;
 		}
+		ResetPatrol();
 	}
 
 	void DoNothing()
@@ -349,12 +350,15 @@ public class Enemy : Entity
 		}
 		if (prospectiveRoute == currentRoute && Mathf.Abs(mPosition.y - patrolRoutes[currentRoute].position.y) <= patrolHeightTolerance)
 		{
+			mPosition = patrolRoutes[currentRoute].GetChild(patrolTarget).position;
 			return;
 		}
 		if (patrolTarget > mPatrolRoute.childCount)
 		{
 			patrolTarget = mPatrolRoute.childCount - 1;
 		}
+		mPosition = patrolRoutes[currentRoute].position;
+
 		lDistance = Mathf.Abs(mPatrolRoute.GetChild(patrolTarget).position.x - player.mPosition.x);
 		if (lDistance < patrolDistanceMinimum)
 		{

@@ -198,7 +198,7 @@ public class Player : Entity
 	}
 	public void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (collision.transform.parent.gameObject.name.Equals("Dining Room"))
+		if (collision.transform.parent != null && collision.transform.parent.gameObject.name.Equals("Dining Room"))
 		{
 			Animator[] anim = FindObjectsOfType<Animator>();
 			for (int i = 0; i < anim.Length; i++)
