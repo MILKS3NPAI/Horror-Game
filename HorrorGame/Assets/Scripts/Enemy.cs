@@ -47,6 +47,7 @@ public class Enemy : Entity
 	Sound warningSound;
 	Player player;
 	AudioSource warningSoundSource;
+	ScriptedAction currentScriptedAction = ScriptedAction.RUN_AND_HIDE;
 
 	protected override void Awake()
 	{
@@ -68,6 +69,8 @@ public class Enemy : Entity
 		stateEnters[(int)AIState.INACTIVE] = InactiveEnter;
 		stateExits[(int)AIState.CHASE] = ChaseExit;
 		stateExits[(int)AIState.INACTIVE] = InactiveExit;
+		stateEnters[(int)AIState.SCRIPTED] = ScriptedEnter;
+		EnemyScriptedActions.Initialize();
 		ConstantResources.Initialize();
 		mGroundFilter = ConstantResources.sEnemyGroundMask;
 		flashlight = FindObjectOfType<FlashlightController>();
@@ -294,6 +297,11 @@ public class Enemy : Entity
 		ResetPatrol();
 	}
 
+	void ScriptedEnter()
+	{
+		EnemyScriptedActions.enterActions[(int)currentScriptedAction].Invoke(this);
+	}
+
 	void PlayWarning(bool iPlay = true)
 	{
 		if (warningSound == null || warningSoundSource == null)
@@ -312,6 +320,12 @@ public class Enemy : Entity
 		{
 			warningSoundSource.volume = 0f;
 		}
+	}
+
+	public void TakeScriptedAction(ScriptedAction iAction)
+	{
+		currentScriptedAction = iAction;
+		mAIState = AIState.SCRIPTED;
 	}
 
 	public void ResetPatrol()

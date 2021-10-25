@@ -74,3 +74,8 @@ public enum StateEvent
 {
 	ENTER, UPDATE, FIXED, EXIT
 }
+
+public enum ScriptedAction
+{
+	RESET_PATROL, RUN_AND_HIDE
+}
