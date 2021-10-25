@@ -5,24 +5,24 @@ using UnityEngine.UI;
 
 public class Player : Entity
 {
-    private Transform pTransfrom;
-    private Animator animator;
+	private Transform pTransfrom;
+	private Animator animator;
 	private Dialogue dialogue;
 	private GameObject enemy;
 	private PlayerControls playerControls;
 	public PlayerControls mPlayerControls { get { return playerControls; } }
 	float direction;
 	[SerializeField] bool _hidden = false;
-	[SerializeField]float useRadius = 3f;
+	[SerializeField] float useRadius = 3f;
 	public bool mHidden { get { return _hidden; } set { if (_hidden == value) return; _hidden = value; collider.isTrigger = value; physicsEnabled = !value; } }
-    [SerializeField] GameObject flashlight;
-    //Get mouse poition
-    Vector2 mousePos;
-    Vector2 mouseAim;
-    public Camera cam;
-    private Transform flTransform;
+	[SerializeField] GameObject flashlight;
+	//Get mouse poition
+	Vector2 mousePos;
+	Vector2 mouseAim;
+	public Camera cam;
+	private Transform flTransform;
 
-    protected override void Awake()
+	protected override void Awake()
 	{
 		base.Awake();
 		playerControls = new PlayerControls();
@@ -42,10 +42,10 @@ public class Player : Entity
 		{
 			Debug.LogWarning("Enemy does not exist in scene, or could not be found.");
 		}
-        flashlight = this.gameObject.transform.Find("Flashlight").gameObject;
-        flTransform = flashlight.GetComponent<Transform>();
-        animator = this.gameObject.GetComponentInChildren<Animator>();
-        pTransfrom = this.gameObject.GetComponent<Transform>();
+		flashlight = this.gameObject.transform.Find("Flashlight").gameObject;
+		flTransform = flashlight.GetComponent<Transform>();
+		animator = this.gameObject.GetComponentInChildren<Animator>();
+		pTransfrom = this.gameObject.GetComponent<Transform>();
 	}
 
 	protected override void Start()
@@ -84,17 +84,17 @@ public class Player : Entity
         }*/
 
 		MoveRelative(lMovement.normalized);
-        animator.SetFloat("Horizontal", lMovement.x);
-        animator.SetFloat("Speed", lMovement.sqrMagnitude);
-        if (lMovement.x < 0)
-        {
-            this.transform.localScale = new Vector3(-1 * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z); 
-        }
-        else if (lMovement.x > 0)
-        {
-            this.transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-        }
-            base.FixedUpdate();
+		animator.SetFloat("Horizontal", lMovement.x);
+		animator.SetFloat("Speed", lMovement.sqrMagnitude);
+		if (lMovement.x < 0)
+		{
+			this.transform.localScale = new Vector3(-1 * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+		}
+		else if (lMovement.x > 0)
+		{
+			this.transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+		}
+		base.FixedUpdate();
 	}
 	protected override void Update()
 	{
@@ -113,43 +113,45 @@ public class Player : Entity
 			Debug.Log("Player is not in a room.");
 		}
 
-        //Flashlight
-        mouseAim = playerControls._2Dmovement.Aim.ReadValue<Vector2>();
+		//Flashlight
+		mouseAim = playerControls._2Dmovement.Aim.ReadValue<Vector2>();
 
-        mousePos = cam.ScreenToWorldPoint(mouseAim);
+		mousePos = cam.ScreenToWorldPoint(mouseAim);
 
-        Vector2 lookDir = mousePos - new Vector2 (flTransform.position.x, flTransform.position.y);
-        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        flTransform.rotation = Quaternion.Euler(0,0,angle);
-    }
+		Vector2 lookDir = mousePos - new Vector2(flTransform.position.x, flTransform.position.y);
+		float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
+		flTransform.rotation = Quaternion.Euler(0, 0, angle);
+	}
 
 	private void Move(float iDirection)
 	{
 		direction = iDirection;
- 
+
 		if (direction != 0 && mGroundDetected && !AudioManager.GetSound("Step1").source.isPlaying)
 		{
 			AudioManager.PlaySound("Step1");
 		}
-        else
-        {
-            AudioManager.StopSound("Step1");
-        }
-    }
+		else
+		{
+			AudioManager.StopSound("Step1");
+		}
+	}
 
 	void Use()
 	{
 		Collider2D[] lUseables = new Collider2D[1];
 		if (Physics2D.OverlapCircle(mPosition2D, useRadius, ConstantResources.sUseableMask, lUseables) > 0)
 		{
-			foreach (Collider2D lCollider in lUseables) {
-				Useable lUseable = lCollider.GetComponent<Useable>();
-				if (lUseable == null)
+			foreach (Collider2D lCollider in lUseables)
+			{
+				foreach (Useable lUseable in lCollider.GetComponents<Useable>())
 				{
-					continue;
+					if (lUseable == null)
+					{
+						continue;
+					}
+					lUseable.Use(this);
 				}
-				lUseable.Use(this);
-				break;
 			}
 		}
 
@@ -160,12 +162,12 @@ public class Player : Entity
 
 	}
 
-    
+
 	void Interaction()
 	{
 
 
-        /*
+		/*
 		if (dialogue == null)
 		{
 			return;
@@ -202,12 +204,12 @@ public class Player : Entity
 		{
 			Animator[] anim = FindObjectsOfType<Animator>();
 			for (int i = 0; i < anim.Length; i++)
-            {
+			{
 				if (anim[i].gameObject.transform.parent.gameObject.name.Equals("Dining Room"))
-                {
+				{
 					anim[i].SetBool("PlayerInDiningRoom", true);
-                }
-            }
+				}
+			}
 		}
 		else
 		{
@@ -215,14 +217,14 @@ public class Player : Entity
 		}
 	}
 
-    public void Kill()
+	public void Kill()
 	{
 		Debug.Log("I is dead", gameObject);
 	}
 
 
-    IEnumerator wait()
-    {
-        yield return new WaitForSeconds(0.2f);
-    }
+	IEnumerator wait()
+	{
+		yield return new WaitForSeconds(0.2f);
+	}
 }
