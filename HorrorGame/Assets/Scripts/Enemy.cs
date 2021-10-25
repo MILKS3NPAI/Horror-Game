@@ -120,7 +120,6 @@ public class Enemy : Entity
 			GameEngine.sPlayer.Kill();
 		}
 		base.FixedUpdate();
-		flashlight.NarrowCone(Mathf.Max(playerDetectionRadius - Vector2.Distance(mPosition2D, GameEngine.sPlayer.mPosition2D), 1));
 	}
 
 	public void ReceiveStimulus(Stimulus iStimulus)
@@ -169,6 +168,7 @@ public class Enemy : Entity
 			}
 		}
 		PlayWarning();
+		flashlight.NarrowCone(Mathf.Max(playerDetectionRadius - Vector2.Distance(mPosition2D, GameEngine.sPlayer.mPosition2D), 1));
 	}
 
 	void PatrolFixed()
@@ -257,6 +257,7 @@ public class Enemy : Entity
 			}
 		}
 		PlayWarning(false);
+		flashlight.RestoreCone();
 	}
 
 	void InactiveFixed()
@@ -308,9 +309,16 @@ public class Enemy : Entity
 		if (warningSound == null || warningSoundSource == null)
 		{
 			warningSound = AudioManager.GetSound(warningSoundString);
+			if (warningSound == null)
+			{
+				return;
+			}
 			warningSoundSource = warningSound.source;
 			warningSoundSource.Play();
-			return;
+			if (warningSound == null || warningSoundSource == null)
+			{
+				return;
+			}
 		}
 		if (iPlay && Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= warningSoundRadius)
 		{
@@ -348,16 +356,16 @@ public class Enemy : Entity
 			mAIState = AIState.INACTIVE;
 			return;
 		}
-		if (prospectiveRoute == currentRoute && Mathf.Abs(mPosition.y - patrolRoutes[currentRoute].position.y) <= patrolHeightTolerance)
+		if (prospectiveRoute == currentRoute && Mathf.Abs(player.mPosition2D.x - mPatrolRoute.GetChild(patrolTarget).position.x) > patrolDistanceMinimum)
 		{
-			mPosition = patrolRoutes[currentRoute].GetChild(patrolTarget).position;
+			mPosition = mPatrolRoute.GetChild(patrolTarget).position;
 			return;
 		}
+		currentRoute = prospectiveRoute;
 		if (patrolTarget > mPatrolRoute.childCount)
 		{
 			patrolTarget = mPatrolRoute.childCount - 1;
 		}
-		mPosition = patrolRoutes[currentRoute].position;
 
 		lDistance = Mathf.Abs(mPatrolRoute.GetChild(patrolTarget).position.x - player.mPosition.x);
 		if (lDistance < patrolDistanceMinimum)
@@ -368,8 +376,17 @@ public class Enemy : Entity
 				if (lDistance > patrolDistanceMinimum)
 				{
 					patrolTarget = i;
+					break;
 				}
 			}
+		}
+		if (patrolTarget == 0)
+		{
+			patrolDir = 1;
+		}
+		else if (patrolTarget == mPatrolRoute.childCount - 1)
+		{
+			patrolDir = -1;
 		}
 		mPosition = mPatrolRoute.GetChild(patrolTarget).position;
 	}
