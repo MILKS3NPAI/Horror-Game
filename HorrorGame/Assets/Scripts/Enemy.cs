@@ -115,7 +115,7 @@ public class Enemy : Entity
 	protected override void FixedUpdate()
 	{
 		stateFixeds[(int)mAIState].Invoke();
-		if (!GameEngine.sPlayer.mHidden && Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= lethalRange)
+		if (lethal && !GameEngine.sPlayer.mHidden && Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= lethalRange && Mathf.Abs(GameEngine.sPlayer.mPosition.y - mPosition.y) <= lethalRange)
 		{
 			GameEngine.sPlayer.Kill();
 		}
