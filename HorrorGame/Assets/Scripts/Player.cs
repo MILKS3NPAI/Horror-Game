@@ -98,20 +98,8 @@ public class Player : Entity
 	}
 	protected override void Update()
 	{
-		if (PlayerRoom().Equals("right"))
-		{
 			AudioManager.MuteSound("Music2");
 			AudioManager.UnmuteSound("Music1");
-		}
-		else if (PlayerRoom().Equals("left"))
-		{
-			AudioManager.MuteSound("Music1");
-			AudioManager.UnmuteSound("Music2");
-		}
-		else
-		{
-			Debug.Log("Player is not in a room.");
-		}
 
 		//Flashlight
 		mouseAim = playerControls._2Dmovement.Aim.ReadValue<Vector2>();

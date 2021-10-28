@@ -6,6 +6,7 @@ using System;
 public class FloorSound : MonoBehaviour
 {
     [SerializeField] string soundName = "Step1";
+    [SerializeField] float soundVolume = .5f;
     [SerializeField] AudioClip newSound;
 
 
@@ -14,6 +15,7 @@ public class FloorSound : MonoBehaviour
         if(collision.gameObject.CompareTag("Player"))
         {
             AudioManager.SetSound(soundName, newSound);
+            AudioManager.SetVolume("Step1", soundVolume);
             AudioManager.PlaySound("Step1");
         }
     }

@@ -11,5 +11,6 @@ class EnemyTrigger : Useable
 	public override void Use(Entity iEntity)
 	{
 		GameEngine.sEnemy.TakeScriptedAction(action);
+        AudioManager.PlaySound("Hell");
 	}
 }
