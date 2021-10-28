@@ -16,7 +16,7 @@ public class FloorSound : MonoBehaviour
         {
             AudioManager.SetSound(soundName, newSound);
             AudioManager.SetVolume("Step1", soundVolume);
-            AudioManager.PlaySound("Step1");
+        
         }
     }
 }
