@@ -91,6 +91,7 @@ public class Enemy : Entity
 			//warningSoundSource.volume = 0;
 			if (warningSoundSource != null)
 			{
+				warningSoundSource.volume = 0f;
 				warningSoundSource.Play();
 			}
 		}
@@ -324,7 +325,6 @@ public class Enemy : Entity
 				return;
 			}
 		}
-		Debug.Log("Playing " + iPlay);
 		if (iPlay && Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= warningSoundRadius)
 		{
 			warningSoundSource.volume = 1f / Mathf.Max((float)Mathf.Abs(player.mPosition.x - mPosition.x), .001f);
