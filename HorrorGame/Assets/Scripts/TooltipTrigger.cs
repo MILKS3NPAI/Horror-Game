@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
     public static GameObject tooltipObject;
     public string content, header;
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         //TooltipSystem.Show(content, header);
@@ -16,11 +17,17 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     }
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        tooltipObject = gameObject;
-        TooltipSystem.Show(content, header);
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            tooltipObject = gameObject;
+            TooltipSystem.Show(content, header);
+        }
     }
     public void OnTriggerExit2D(Collider2D collision)
     {
-        TooltipSystem.Hide();
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            TooltipSystem.Hide();
+        }
     }
 }

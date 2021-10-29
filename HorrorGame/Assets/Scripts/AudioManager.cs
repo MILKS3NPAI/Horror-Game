@@ -29,12 +29,13 @@ public class AudioManager : MonoBehaviour
                 s.volume = PauseMenu.volume;
             }
             s.source = gameObject.AddComponent<AudioSource>();
+            s.source.playOnAwake = false;
             s.source.loop = s.canLoop;
             s.source.clip = s.clip;
             s.source.volume = s.volume;
+            
         }
         PlaySound("Music1");
-        PlaySound("Music2");
     }
 
     public static void PlaySound(string name)
