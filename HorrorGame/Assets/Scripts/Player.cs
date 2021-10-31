@@ -15,7 +15,7 @@ public class Player : Entity
 	[SerializeField] bool _hidden = false;
 	[SerializeField] float useRadius = 3f;
 	public bool mHidden { get { return _hidden; } set { if (_hidden == value) return; _hidden = value; collider.isTrigger = value; physicsEnabled = !value; } }
-	[SerializeField] GameObject flashlight;
+	[SerializeField] GameObject deathScreen, flashlight;
 	//Get mouse poition
 	Vector2 mousePos;
 	Vector2 mouseAim;
@@ -208,6 +208,14 @@ public class Player : Entity
 	public void Kill()
 	{
 		Debug.Log("I is dead", gameObject);
+		if (deathScreen != null)
+        {
+			deathScreen.SetActive(true);
+        }
+        else
+        {
+			Debug.Log("Death Screen not set");
+        }
 	}
 
 

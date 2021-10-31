@@ -1,0 +1,25 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Video;
+
+public class DeathScreen : MonoBehaviour
+{
+    private float timeOfDeath;
+    private GameObject deathMenu;
+    private VideoPlayer videoPlayer;
+    private void Start()
+    {
+        timeOfDeath = Time.time;
+        deathMenu = transform.GetChild(2).gameObject;
+        videoPlayer = transform.GetChild(0).gameObject.GetComponent<VideoPlayer>();
+    }
+    private void Update()
+    {
+        if (!videoPlayer.isPlaying && Time.time - 5 > timeOfDeath)
+        {
+            deathMenu.SetActive(true);
+            //Debug.Log("Video ended");
+        }
+    }
+}
