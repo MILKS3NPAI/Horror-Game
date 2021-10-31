@@ -12,6 +12,10 @@ class CollisionTrigger : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D iCollider)
 	{
+		if (iCollider.GetComponent<Player>() == null)
+		{
+			return;
+		}
 		if (firesOnce)
 		{
 			gameObject.SetActive(false);
