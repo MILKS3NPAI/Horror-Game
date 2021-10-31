@@ -210,6 +210,7 @@ public class Player : Entity
 		Debug.Log("I is dead", gameObject);
 		if (deathScreen != null)
         {
+			playerControls._2Dmovement.Disable();
 			deathScreen.SetActive(true);
         }
         else
