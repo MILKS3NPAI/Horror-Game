@@ -188,16 +188,17 @@ public class Player : Entity
 	}
 	public void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (collision.transform.parent != null && collision.transform.parent.gameObject.name.Equals("Dining Room"))
+		if (collision.transform.name.Equals("Chandelier"))
 		{
-			Animator[] anim = FindObjectsOfType<Animator>();
+			collision.gameObject.GetComponent<Animator>().SetBool("PlayerInDiningRoom", true);
+			/*Animator[] anim = FindObjectsOfType<Animator>();
 			for (int i = 0; i < anim.Length; i++)
 			{
 				if (anim[i].gameObject.transform.parent.gameObject.name.Equals("Dining Room"))
 				{
 					anim[i].SetBool("PlayerInDiningRoom", true);
 				}
-			}
+			}*/
 		}
 		else
 		{
