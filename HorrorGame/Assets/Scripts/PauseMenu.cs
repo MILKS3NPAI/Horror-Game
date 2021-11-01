@@ -12,11 +12,14 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] Camera camera;
     [SerializeField] GameObject pauseMenu, soundMenu;
     [SerializeField] Slider slider;
+    //[SerializeField] Vector3 positionOffset;
+    private GameObject player;
     PlayerControls playerControls;
 
     //Initialize the PlayerControls Map to use 
     protected void Awake()
     {
+        player = FindObjectOfType<Player>().gameObject;
         playerControls = new PlayerControls();
     }
     //This just detects when Pause is pressed in the map(PlayerControls.UI) (Currently:P)
@@ -58,13 +61,13 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(true);
         isPaused = true;
         Time.timeScale = 0;
-        pauseMenu.transform.position = new Vector3(camera.transform.position.x, camera.transform.position.y, 0);
+        pauseMenu.transform.position = player.transform.position + new Vector3(0, 1.68f, 0);
     }
     public void SoundMenu()
     {
         soundMenu.SetActive(true);
         pauseMenu.SetActive(false);
-        soundMenu.transform.position = new Vector3(camera.transform.position.x, camera.transform.position.y, 0);
+        soundMenu.transform.position = player.transform.position + new Vector3(0, 1.68f, 0);
     }
     public void MenuReturn()
     {

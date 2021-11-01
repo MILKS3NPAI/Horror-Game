@@ -191,14 +191,6 @@ public class Player : Entity
 		if (collision.transform.name.Equals("Chandelier"))
 		{
 			collision.gameObject.GetComponent<Animator>().SetBool("PlayerInDiningRoom", true);
-			/*Animator[] anim = FindObjectsOfType<Animator>();
-			for (int i = 0; i < anim.Length; i++)
-			{
-				if (anim[i].gameObject.transform.parent.gameObject.name.Equals("Dining Room"))
-				{
-					anim[i].SetBool("PlayerInDiningRoom", true);
-				}
-			}*/
 		}
 		else
 		{
