@@ -7,13 +7,18 @@ public class DeathMenu : MonoBehaviour
 {
     public void RestartGame()
     {
-        // change this scene to actual game later
-        SceneManager.LoadScene(sceneName: "Kevin's Scene");
+        AudioManager.PlaySound("Hide1");
+        StartCoroutine(Wait());
     }
     public void ExitGame()
     {
         AudioManager.StopSound("Music1");
         AudioManager.StopSound("Music2");
         SceneManager.LoadScene(sceneName: "Main Menu");
+    }
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene(sceneName: "Kevin's Scene"); // change this scene to actual game later
     }
 }

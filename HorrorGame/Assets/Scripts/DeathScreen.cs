@@ -26,6 +26,7 @@ public class DeathScreen : MonoBehaviour
         for (int i = 0; i < AudioManager.AM.sounds.Length; i++)
         {
             AudioManager.StopSound(AudioManager.AM.sounds[i].name);
+            //AudioManager.MuteSound(AudioManager.AM.sounds[i].name);
         }
     }
     private void Update()
