@@ -11,6 +11,15 @@ public class DeathScreen : MonoBehaviour
     private void Start()
     {
         timeOfDeath = Time.time;
+        VideoPlayer[] videoPlayers = FindObjectsOfType<VideoPlayer>();
+        for (int i = 0; i < videoPlayers.Length; i++)
+        {
+            if (videoPlayers[i].gameObject.transform.parent.gameObject.name.Equals("TV Static"))
+            {
+                videoPlayers[i].gameObject.transform.parent.gameObject.SetActive(false);
+            }
+        }
+
         deathMenu = transform.GetChild(2).gameObject;
         videoPlayer = transform.GetChild(0).gameObject.GetComponent<VideoPlayer>();
         videoPlayer.SetDirectAudioVolume(0, PauseMenu.volume/2);
