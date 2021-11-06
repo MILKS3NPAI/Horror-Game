@@ -47,7 +47,6 @@ public class Enemy : Entity
 	Player player;
 	AudioSource warningSoundSource;
 	ScriptedAction currentScriptedAction = ScriptedAction.RUN_AND_HIDE;
-	[SerializeField] float useRange = .5f;
 
 	protected override void Awake()
 	{
@@ -187,7 +186,7 @@ public class Enemy : Entity
 				patrolDir *= -1;
 			}
 		}
-		MoveRelative(new Vector2(mPatrolRoute.GetChild(patrolTarget).position.x - mPosition.x, 0));
+		PathTo(moveTarget);
 		if (Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= playerDetectionRadius && mCanSeePlayer)
 		{
 			mAIState = AIState.CHASE;
@@ -237,7 +236,7 @@ public class Enemy : Entity
 			}
 			else if (suspectedDoor != null)
 			{
-				if (Mathf.Abs(mPosition.x - suspectedDoor.transform.position.x) < useRange)
+				if (Mathf.Abs(mPosition.x - suspectedDoor.transform.position.x) < useRadius)
 				{
 					suspectedDoor.Use(this);
 				}
@@ -350,47 +349,25 @@ public class Enemy : Entity
 
 	public void ResetPatrol()
 	{
-		int prospectiveRoute = -1;
-		float lDistance;
-		for (int i = 0; i < patrolRoutes.Length; i++)
+		for (int i = patrolTarget; i < mPatrolRoute.childCount; i++)
 		{
-			lDistance = Mathf.Abs(player.mPosition.y - patrolRoutes[i].position.y);
-			if (lDistance <= patrolHeightTolerance)
+			float lDistance = Mathf.Abs(mPatrolRoute.GetChild(i).position.x - player.mPosition.x);
+			if (lDistance > patrolDistanceMinimum)
 			{
-				prospectiveRoute = i;
+				patrolTarget = i;
 				break;
 			}
 		}
-		if (prospectiveRoute == -1)
+		for (int i = patrolTarget = 0; i < mPatrolRoute.childCount; i++)
 		{
-			Debug.LogError("Player not on a valid floor with patrol routes.");
-			mAIState = AIState.INACTIVE;
-			return;
-		}
-		if (prospectiveRoute == currentRoute && Mathf.Abs(player.mPosition2D.x - mPatrolRoute.GetChild(patrolTarget).position.x) > patrolDistanceMinimum)
-		{
-			mPosition = mPatrolRoute.GetChild(patrolTarget).position;
-			return;
-		}
-		currentRoute = prospectiveRoute;
-		if (patrolTarget > mPatrolRoute.childCount)
-		{
-			patrolTarget = mPatrolRoute.childCount - 1;
-		}
-
-		lDistance = Mathf.Abs(mPatrolRoute.GetChild(patrolTarget).position.x - player.mPosition.x);
-		if (lDistance < patrolDistanceMinimum)
-		{
-			for (int i = 0; i < mPatrolRoute.childCount; i++)
+			float lDistance = Mathf.Abs(mPatrolRoute.GetChild(i).position.x - player.mPosition.x);
+			if (lDistance > patrolDistanceMinimum)
 			{
-				lDistance = Mathf.Abs(mPatrolRoute.GetChild(i).position.x - player.mPosition.x);
-				if (lDistance > patrolDistanceMinimum)
-				{
-					patrolTarget = i;
-					break;
-				}
+				patrolTarget = i;
+				break;
 			}
 		}
+
 		if (patrolTarget == 0)
 		{
 			patrolDir = 1;
@@ -400,5 +377,11 @@ public class Enemy : Entity
 			patrolDir = -1;
 		}
 		mPosition = mPatrolRoute.GetChild(patrolTarget).position;
+	}
+
+	public void SetPatrolRoute(int iRoute, int iPoint = 0)
+	{
+		currentRoute = iRoute;
+		patrolTarget = Mathf.Min(iPoint, patrolRoutes[currentRoute].childCount - 1);
 	}
 }

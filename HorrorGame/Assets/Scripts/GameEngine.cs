@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class GameEngine : MonoBehaviour
 {
@@ -11,5 +12,12 @@ public class GameEngine : MonoBehaviour
 	private void Awake()
 	{
 		ConstantResources.Initialize();
+	}
+	static string fileName = "MyLog.txt";
+	public static void LogToFile(string iMessage)
+	{
+		StreamWriter lWriter = new StreamWriter(fileName, true);
+		lWriter.WriteLine(iMessage);
+		lWriter.Close();
 	}
 }

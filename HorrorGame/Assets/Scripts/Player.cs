@@ -13,7 +13,6 @@ public class Player : Entity
 	public PlayerControls mPlayerControls { get { return playerControls; } }
 	float direction;
 	[SerializeField] bool _hidden = false;
-	[SerializeField] float useRadius = 3f;
 	public bool mHidden { get { return _hidden; } set { if (_hidden == value) return; _hidden = value; collider.isTrigger = value; physicsEnabled = !value; } }
 	[SerializeField] GameObject deathScreen, flashlight;
 	//Get mouse poition

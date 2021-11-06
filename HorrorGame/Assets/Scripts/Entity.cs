@@ -59,7 +59,25 @@ public class Entity : MonoBehaviour
 	public bool mGroundDetected { get { return groundDetected; } }
 	public bool mMovementDisabled { get; set; }
 	public bool mVisible { get { return sprite.enabled; } set { sprite.enabled = value; mMovementDisabled = !sprite.enabled; collider.isTrigger = !sprite.enabled; } }
+	public DoorController mClosestRelevantDoor
+	{
+		get
+		{
+			if (closestRelevantDoor != null && Mathf.Abs(closestRelevantDoor.transform.position.y - mPosition.y) <= verticalTolerance) { GameEngine.LogToFile("Found at " + closestRelevantDoor.transform.position); return closestRelevantDoor; }
+			if (DoorController.sAllDoors.Count == 0) return null;
+			closestRelevantDoor = DoorController.sAllDoors[0];
+			foreach (DoorController lController in DoorController.sAllDoors)
+			{
+				if (Mathf.Abs(lController.transform.position.y - mPosition.y) <= verticalTolerance && Mathf.Abs(lController.transform.position.x - mPosition.x) < Mathf.Abs(closestRelevantDoor.transform.position.x - mPosition.x))
+				{ closestRelevantDoor = lController; }
+			}
+			return closestRelevantDoor;
+		}
+	}
 	SpriteRenderer sprite;
+	DoorController closestRelevantDoor;
+	static float verticalTolerance = 8f;
+	[SerializeField] protected float useRadius = 3f;
 
 	protected virtual void Awake()
 	{
@@ -251,5 +269,35 @@ public class Entity : MonoBehaviour
 			return;
 		}
 		entityMovement = iMovement;
+	}
+
+	public void PathTo(Vector2 iLocation)
+	{
+		if (mClosestRelevantDoor == null || Mathf.Abs(iLocation.y - mPosition.y) <= verticalTolerance)
+		{
+			MoveRelative(new Vector2(iLocation.x - mPosition.x, 0));
+		}
+		else if (closestRelevantDoor != null)
+		{
+			MoveRelative(new Vector2(closestRelevantDoor.transform.position.x - mPosition.x, 0));
+			if (Mathf.Abs(closestRelevantDoor.transform.position.x - mPosition.x) <= useRadius)
+			{
+				DoorTrigger lDoor = closestRelevantDoor.GetComponent<DoorTrigger>();
+				if (lDoor == null)
+				{
+					lDoor = closestRelevantDoor.GetComponentInChildren<DoorTrigger>();
+				}
+				if (lDoor != null)
+				{
+					lDoor.Use(this);
+					Debug.Log("Used door: " + lDoor, lDoor);
+					return;
+				}
+				else
+				{
+					Debug.LogError("For some reason, the door here does not have a door trigger.", closestRelevantDoor);
+				}
+			}
+		}
 	}
 }
