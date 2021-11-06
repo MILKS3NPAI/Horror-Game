@@ -59,6 +59,7 @@ public class Entity : MonoBehaviour
 	public bool mGroundDetected { get { return groundDetected; } }
 	public bool mMovementDisabled { get; set; }
 	public bool mVisible { get { return sprite.enabled; } set { sprite.enabled = value; mMovementDisabled = !sprite.enabled; collider.isTrigger = !sprite.enabled; } }
+	public Vector2 mPathTarget { get; protected set; }
 	public DoorController mClosestRelevantDoor
 	{
 		get
@@ -68,7 +69,7 @@ public class Entity : MonoBehaviour
 			closestRelevantDoor = DoorController.sAllDoors[0];
 			foreach (DoorController lController in DoorController.sAllDoors)
 			{
-				if (Mathf.Abs(lController.transform.position.y - mPosition.y) <= verticalTolerance && Mathf.Abs(lController.transform.position.x - mPosition.x) < Mathf.Abs(closestRelevantDoor.transform.position.x - mPosition.x))
+				if (Mathf.Abs(lController.transform.position.y - mPosition.y) <= verticalTolerance && lController.GoesToward(mPathTarget.y - mPosition.y) && Mathf.Abs(lController.transform.position.x - mPosition.x) < Mathf.Abs(closestRelevantDoor.transform.position.x - mPosition.x))
 				{ closestRelevantDoor = lController; }
 			}
 			return closestRelevantDoor;
@@ -76,7 +77,7 @@ public class Entity : MonoBehaviour
 	}
 	SpriteRenderer sprite;
 	DoorController closestRelevantDoor;
-	static float verticalTolerance = 8f;
+	static protected float verticalTolerance = 8f;
 	[SerializeField] protected float useRadius = 3f;
 
 	protected virtual void Awake()
@@ -273,6 +274,7 @@ public class Entity : MonoBehaviour
 
 	public void PathTo(Vector2 iLocation)
 	{
+		mPathTarget = iLocation;
 		if (mClosestRelevantDoor == null || Mathf.Abs(iLocation.y - mPosition.y) <= verticalTolerance)
 		{
 			MoveRelative(new Vector2(iLocation.x - mPosition.x, 0));

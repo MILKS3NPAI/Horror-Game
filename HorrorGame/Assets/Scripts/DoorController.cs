@@ -15,6 +15,11 @@ public class DoorController : MonoBehaviour
 	Vector3 pos;
 	Vector3 pos1;
 
+	public bool GoesToward(float iDir)
+	{
+		return (dir > 0 && iDir > 0) || (dir < 0 && iDir < 0);
+	}
+
 	void Start()
 	{
 		player = GameObject.FindGameObjectWithTag("Player");

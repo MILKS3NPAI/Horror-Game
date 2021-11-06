@@ -19,7 +19,6 @@ public class Enemy : Entity
 	public AIState mAIState { get { return _aiState; } set { if (value == _aiState) return; mPreviousAIState = _aiState; stateExits[(int)_aiState].Invoke(); _aiState = value; stateEnters[(int)_aiState].Invoke(); stateTime = 0f; } }
 	public Transform mPatrolRoute { get { return patrolRoutes[currentRoute]; } }
 	public Transform[] patrolRoutes = new Transform[0];
-	[SerializeField] float patrolHeightTolerance = 5f;
 	[SerializeField] float patrolDistanceMinimum = 10f;
 	int currentRoute = 0;
 	int patrolDir = 1;
@@ -178,7 +177,7 @@ public class Enemy : Entity
 	void PatrolFixed()
 	{
 		moveTarget = new Vector2(mPatrolRoute.GetChild(patrolTarget).position.x, mPatrolRoute.GetChild(patrolTarget).position.y);
-		if (Mathf.Abs(moveTarget.x - mPosition.x) <= mMoveSpeed * Time.fixedDeltaTime)
+		if (Mathf.Abs(moveTarget.x - mPosition.x) <= mMoveSpeed * Time.fixedDeltaTime && Mathf.Abs(moveTarget.y - mPosition.y) <= verticalTolerance)
 		{
 			patrolTarget += patrolDir;
 			if (patrolTarget >= mPatrolRoute.childCount - 1 || patrolTarget == 0)
