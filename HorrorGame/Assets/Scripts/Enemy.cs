@@ -29,7 +29,6 @@ public class Enemy : Entity
 	[SerializeField] float playerDetectionRadius = 5f;
 	[SerializeField] float warningSoundRadius = 7f;
 	[SerializeField] float warningSoundPan = .8f;
-	int searchStage = 0;
 	[SerializeField] float searchRadius = 5f;
 	[SerializeField] float searchDuration = 10f;
 	float searchTimer = 10f;
@@ -48,6 +47,7 @@ public class Enemy : Entity
 	Player player;
 	AudioSource warningSoundSource;
 	ScriptedAction currentScriptedAction = ScriptedAction.RUN_AND_HIDE;
+	[SerializeField] float useRange = .5f;
 
 	protected override void Awake()
 	{
@@ -217,7 +217,6 @@ public class Enemy : Entity
 			}
 		}
 		searchTimer = searchDuration;
-		searchStage = 0;
 		searchDir = previousEntityMovement.x > 0 ? 1 : -1;
 	}
 
@@ -238,7 +237,14 @@ public class Enemy : Entity
 			}
 			else if (suspectedDoor != null)
 			{
-				suspectedDoor.Use(this);
+				if (Mathf.Abs(mPosition.x - suspectedDoor.transform.position.x) < useRange)
+				{
+					suspectedDoor.Use(this);
+				}
+				else
+				{
+					lMoveTarget = suspectedDoor.transform.position.x;
+				}
 			}
 		}
 		MoveRelative(new Vector2(lMoveTarget - mPosition.x, 0));
