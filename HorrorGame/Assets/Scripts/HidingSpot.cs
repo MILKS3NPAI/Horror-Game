@@ -57,6 +57,7 @@ public class HidingSpot : Useable
 			hidingSpotCamera.depth = -2;
 			lPlayer.mHidden = false;
 			lPlayer.mMovementDisabled = false;
+            AudioManager.StopSound("Breathing");
 		}
 		else
 		{
@@ -65,6 +66,7 @@ public class HidingSpot : Useable
 			lPlayer.transform.position = new Vector3(returnPosition.x, returnPosition.y, lPlayer.transform.position.z);
 			lPlayer.ZeroMovement();
 			lPlayer.mMovementDisabled = true;
+            AudioManager.PlaySound("Breathing");
 		}
 	}
 }
