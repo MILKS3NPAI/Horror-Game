@@ -19,6 +19,6 @@ public class DeathMenu : MonoBehaviour
     IEnumerator Wait()
     {
         yield return new WaitForSeconds(0.5f);
-        SceneManager.LoadScene(sceneName: "Kevin's Scene"); // change this scene to actual game later
+        SceneManager.LoadScene(sceneName: "Demo Scene");
     }
 }

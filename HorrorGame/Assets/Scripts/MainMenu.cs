@@ -7,8 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     public void StartGame()
     {
-        // change this scene to actual game later
-        SceneManager.LoadScene(sceneName: "Kevin's Scene");
+        SceneManager.LoadScene(sceneName: "Demo Scene");
     }
     public void ExitGame()
     {

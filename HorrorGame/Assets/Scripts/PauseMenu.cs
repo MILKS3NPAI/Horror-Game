@@ -19,7 +19,14 @@ public class PauseMenu : MonoBehaviour
     //Initialize the PlayerControls Map to use 
     protected void Awake()
     {
-        player = FindObjectOfType<Player>().gameObject;
+        try
+        {
+            player = FindObjectOfType<Player>().gameObject;
+        }
+        catch (System.Exception)
+        {
+            return;
+        }
         playerControls = new PlayerControls();
     }
     //This just detects when Pause is pressed in the map(PlayerControls.UI) (Currently:P)
