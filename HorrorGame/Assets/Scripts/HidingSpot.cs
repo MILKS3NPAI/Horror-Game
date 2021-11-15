@@ -5,10 +5,11 @@ using UnityEngine;
 public class HidingSpot : Useable
 {
 	public Camera hidingSpotCamera;
-	[SerializeField] string spotType;
+	[SerializeField] SpotType spotType;
 	Transform returnPoint;
 	Vector3 returnPosition;
 	Player mPlayer { get { return GameEngine.sPlayer; } }
+	[SerializeField] Transform monsterShadow;
 
 	private void Awake()
 	{
@@ -33,20 +34,24 @@ public class HidingSpot : Useable
 			returnPosition = transform.position + Vector3.up * 10;
 			return;
 		}
+		if (monsterShadow == null)
+		{
+			monsterShadow = hidingSpotCamera.transform.Find("MonsterShadow");
+		}
 	}
 
 	public override void Use(Entity iEntity)
 	{
-		if (spotType.Equals("1"))
-        {
+		if (spotType == SpotType.DOOR) //Box and table are only fillins, use whatever name makes sense. However, strings are slow.
+		{
 			//FindObjectOfType<AudioManager>().gameObject.transform.position = transform.position;
 			AudioManager.PlaySound("Hide1");
-        }
-		else if (spotType.Equals("2"))
-        {
+		}
+		else if (spotType == SpotType.CRAWL_SPACE)
+		{
 			//FindObjectOfType<AudioManager>().gameObject.transform.position = transform.position;
 			AudioManager.PlaySound("Hide2");
-        }
+		}
 		if (!(iEntity is Player))
 		{
 			return;
@@ -57,7 +62,7 @@ public class HidingSpot : Useable
 			hidingSpotCamera.depth = -2;
 			lPlayer.mHidden = false;
 			lPlayer.mMovementDisabled = false;
-            AudioManager.StopSound("Breathing");
+			AudioManager.StopSound("Breathing");
 		}
 		else
 		{
@@ -66,7 +71,7 @@ public class HidingSpot : Useable
 			lPlayer.transform.position = new Vector3(returnPosition.x, returnPosition.y, lPlayer.transform.position.z);
 			lPlayer.ZeroMovement();
 			lPlayer.mMovementDisabled = true;
-            AudioManager.PlaySound("Breathing");
+			AudioManager.PlaySound("Breathing");
 		}
 	}
 }

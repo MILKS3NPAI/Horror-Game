@@ -79,3 +79,7 @@ public enum ScriptedAction
 {
 	RESET_PATROL, RUN_AND_HIDE
 }
+
+public enum SpotType {
+	CRAWL_SPACE, DOOR
+}
