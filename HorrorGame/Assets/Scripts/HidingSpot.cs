@@ -9,7 +9,9 @@ public class HidingSpot : Useable
 	Transform returnPoint;
 	Vector3 returnPosition;
 	Player mPlayer { get { return GameEngine.sPlayer; } }
+	Enemy mEnemy { get { return GameEngine.sEnemy; } }
 	[SerializeField] Transform monsterShadow;
+	[SerializeField] float xOffsetMultiplier = 1f;
 
 	private void Awake()
 	{
@@ -34,10 +36,15 @@ public class HidingSpot : Useable
 			returnPosition = transform.position + Vector3.up * 10;
 			return;
 		}
+	}
+
+	private void Start()
+	{
 		if (monsterShadow == null)
 		{
 			monsterShadow = hidingSpotCamera.transform.Find("MonsterShadow");
 		}
+		monsterShadow.gameObject.SetActive(false);
 	}
 
 	public override void Use(Entity iEntity)
@@ -63,6 +70,7 @@ public class HidingSpot : Useable
 			lPlayer.mHidden = false;
 			lPlayer.mMovementDisabled = false;
 			AudioManager.StopSound("Breathing");
+			monsterShadow.gameObject.SetActive(false);
 		}
 		else
 		{
@@ -72,6 +80,16 @@ public class HidingSpot : Useable
 			lPlayer.ZeroMovement();
 			lPlayer.mMovementDisabled = true;
 			AudioManager.PlaySound("Breathing");
+			monsterShadow.gameObject.SetActive(true);
+		}
+	}
+
+	private void FixedUpdate()
+	{
+		if (Vector2.Distance(mPlayer.mPosition2D, transform.position) <= (mPlayer.mUseRadius * 4f))
+		{
+			monsterShadow.gameObject.SetActive(mEnemy.mSameFloorAsPlayer);
+			monsterShadow.localPosition = new Vector3((mEnemy.mPosition.x - transform.position.x) * xOffsetMultiplier, monsterShadow.localPosition.y, monsterShadow.localPosition.z);
 		}
 	}
 }

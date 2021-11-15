@@ -35,6 +35,7 @@ public class Enemy : Entity
 	[SerializeField] float lethalRange = 2f;
 	int searchDir = 1;
 	public bool mCanSeePlayer { get { return (!GameEngine.sPlayer.mHidden && mAIState != AIState.INACTIVE) && Mathf.Abs(GameEngine.sPlayer.transform.position.y - transform.position.y) < playerDetectionRadius; } }
+	public bool mSameFloorAsPlayer { get { return Mathf.Abs(GameEngine.sPlayer.mPosition.y - mPosition.y) <= verticalTolerance; } }
 	DoorTrigger suspectedDoor;
 	[SerializeField] Transform[] hidePoints = new Transform[0];
 	Transform nearestHidePoint;

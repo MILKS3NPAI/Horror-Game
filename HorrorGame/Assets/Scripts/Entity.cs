@@ -60,6 +60,7 @@ public class Entity : MonoBehaviour
 	public bool mMovementDisabled { get; set; }
 	public bool mVisible { get { return sprite.enabled; } set { sprite.enabled = value; mMovementDisabled = !sprite.enabled; collider.isTrigger = !sprite.enabled; } }
 	public Vector2 mPathTarget { get; protected set; }
+	public float mUseRadius { get { return useRadius; } }
 	public DoorController mClosestRelevantDoor
 	{
 		get
