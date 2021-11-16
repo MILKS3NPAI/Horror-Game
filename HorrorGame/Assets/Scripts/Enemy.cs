@@ -47,6 +47,7 @@ public class Enemy : Entity
 	Player player;
 	AudioSource warningSoundSource;
 	ScriptedAction currentScriptedAction = ScriptedAction.RUN_AND_HIDE;
+	bool playerSeenHiding = false;
 
 	protected override void Awake()
 	{
@@ -122,6 +123,7 @@ public class Enemy : Entity
 		if (lethal && !GameEngine.sPlayer.mHidden && Mathf.Abs(GameEngine.sPlayer.mPosition.x - mPosition.x) <= lethalRange && Mathf.Abs(GameEngine.sPlayer.mPosition.y - mPosition.y) <= lethalRange)
 		{
 			GameEngine.sPlayer.Kill();
+			GameEngine.PlayDeathScreen(DeathType.CHASE_CONTACT);
 		}
 		base.FixedUpdate();
 	}
@@ -202,6 +204,7 @@ public class Enemy : Entity
 
 	void SearchEnter()
 	{
+		Debug.Log("Search enter");
 		Collider2D[] lResults = new Collider2D[2];
 		suspectedDoor = null;
 		if (Physics2D.OverlapBox(lastKnownLocation, Vector2.one * mMoveSpeed * Time.fixedDeltaTime, 0f, ConstantResources.sUseableMask, lResults) > 0)
@@ -210,13 +213,53 @@ public class Enemy : Entity
 			{
 				if (lCollider == null)
 				{
-					return;
+					continue;
 				}
 				suspectedDoor = lCollider.GetComponent<DoorTrigger>();
 			}
 		}
 		searchTimer = searchDuration;
 		searchDir = previousEntityMovement.x > 0 ? 1 : -1;
+		if (player.mHidden)
+		{
+			Debug.Log("Player was hidden");
+			Collider2D[] lUseables = new Collider2D[1];
+			if (Physics2D.OverlapCircle(mPosition2D, playerDetectionRadius, ConstantResources.sUseableMask, lUseables) > 0)
+			{
+				Debug.Log("Useable found");
+				foreach (Collider2D lCollider in lUseables)
+				{
+					Debug.Log("Collider: " + lCollider);
+					HidingSpot lSpot = lCollider.GetComponent<HidingSpot>();
+					Debug.Log("Hiding spot: ", lSpot);
+					if (lSpot != null)
+					{
+						if (lSpot == null)
+						{
+							continue;
+						}
+						if (lSpot.mVisibleDistance >= Mathf.Abs(lastKnownLocation.x - lSpot.transform.position.x) && Random.Range(0, 100) <= (lSpot.mChanceToSee + (lSpot.mVisibleDistance / Mathf.Max(Mathf.Abs(mPosition2D.x - lSpot.transform.position.x), .00001f))))
+						{
+							Debug.Log("Player was caught hiding.");
+							playerSeenHiding = true;
+							break;
+						}
+						else
+						{
+							Debug.Log("Player was not caught hiding " + (lSpot.mVisibleDistance >= Mathf.Abs(lastKnownLocation.x - lSpot.transform.position.x)) + ", " + (lSpot.mChanceToSee + (lSpot.mVisibleDistance / Mathf.Max(Mathf.Abs(mPosition2D.x - lSpot.transform.position.x), .00001f))));
+						}
+					}
+				}
+			}
+			else
+			{
+				Debug.Log("Hiding spot not encountered");
+			}
+		}
+		else
+		{
+			Debug.Log("Player was not hidden " + player, player);
+		}
 	}
 
 	void SearchFixed()
@@ -250,7 +293,15 @@ public class Enemy : Entity
 		searchTimer -= Time.fixedDeltaTime;
 		if (searchTimer <= 0)
 		{
-			mAIState = AIState.INACTIVE;
+			searchTimer = searchDuration;
+			if (playerSeenHiding)
+			{
+				GameEngine.PlayDeathScreen(DeathType.HIDING_SPOT_FIND);
+			}
+			else
+			{
+				mAIState = AIState.INACTIVE;
+			}
 		}
 		PlayWarning();
 	}

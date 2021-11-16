@@ -83,3 +83,7 @@ public enum ScriptedAction
 public enum SpotType {
 	CRAWL_SPACE, DOOR
 }
+
+public enum DeathType {
+	CHASE_CONTACT, HIDING_SPOT_FIND
+}

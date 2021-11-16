@@ -203,7 +203,7 @@ public class Player : Entity
 		if (deathScreen != null)
         {
 			playerControls._2Dmovement.Disable();
-			deathScreen.SetActive(true);
+			//deathScreen.SetActive(true);
         }
         else
         {

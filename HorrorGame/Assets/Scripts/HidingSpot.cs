@@ -12,6 +12,10 @@ public class HidingSpot : Useable
 	Enemy mEnemy { get { return GameEngine.sEnemy; } }
 	[SerializeField] Transform monsterShadow;
 	[SerializeField] float xOffsetMultiplier = 1f;
+	[SerializeField] float visibleDistance = 5f;
+	public float mVisibleDistance { get { return visibleDistance; } }
+	[SerializeField] float percentChanceToSee = 10f;
+	public float mChanceToSee { get { return percentChanceToSee; } }
 
 	private void Awake()
 	{

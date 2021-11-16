@@ -8,6 +8,7 @@ public class DeathScreen : MonoBehaviour
     private float timeOfDeath;
     private GameObject deathMenu;
     private VideoPlayer videoPlayer;
+    [SerializeField] float playDuration = 5f;
     private void Start()
     {
         timeOfDeath = Time.time;
@@ -31,7 +32,7 @@ public class DeathScreen : MonoBehaviour
     }
     private void Update()
     {
-        if (!videoPlayer.isPlaying && Time.time - 5 > timeOfDeath)
+        if (!videoPlayer.isPlaying && Time.time - playDuration > timeOfDeath)
         {
             deathMenu.SetActive(true);
         }
