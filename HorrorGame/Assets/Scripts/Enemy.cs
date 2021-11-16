@@ -222,16 +222,12 @@ public class Enemy : Entity
 		searchDir = previousEntityMovement.x > 0 ? 1 : -1;
 		if (player.mHidden)
 		{
-			Debug.Log("Player was hidden");
 			Collider2D[] lUseables = new Collider2D[1];
 			if (Physics2D.OverlapCircle(mPosition2D, playerDetectionRadius, ConstantResources.sUseableMask, lUseables) > 0)
 			{
-				Debug.Log("Useable found");
 				foreach (Collider2D lCollider in lUseables)
 				{
-					Debug.Log("Collider: " + lCollider);
 					HidingSpot lSpot = lCollider.GetComponent<HidingSpot>();
-					Debug.Log("Hiding spot: ", lSpot);
 					if (lSpot != null)
 					{
 						if (lSpot == null)
@@ -244,21 +240,9 @@ public class Enemy : Entity
 							playerSeenHiding = true;
 							break;
 						}
-						else
-						{
-							Debug.Log("Player was not caught hiding " + (lSpot.mVisibleDistance >= Mathf.Abs(lastKnownLocation.x - lSpot.transform.position.x)) + ", " + (lSpot.mChanceToSee + (lSpot.mVisibleDistance / Mathf.Max(Mathf.Abs(mPosition2D.x - lSpot.transform.position.x), .00001f))));
-						}
 					}
 				}
 			}
-			else
-			{
-				Debug.Log("Hiding spot not encountered");
-			}
-		}
-		else
-		{
-			Debug.Log("Player was not hidden " + player, player);
 		}
 	}
 
@@ -352,7 +336,7 @@ public class Enemy : Entity
 
 	void ChaseExit()
 	{
-
+		flashlight.RestoreCone();
 	}
 
 	void InactiveExit()

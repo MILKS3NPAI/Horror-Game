@@ -55,5 +55,6 @@ public class FlashlightController : MonoBehaviour
 		//flashlight.pointLightOuterRadius = outerRadius;
 		flashlight.pointLightInnerAngle = innerAngle;
 		flashlight.pointLightOuterAngle = outerAngle;
+		flashlight.enabled = true;
 	}
 }

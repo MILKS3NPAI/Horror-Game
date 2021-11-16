@@ -10306,6 +10306,8 @@ MonoBehaviour:
   spotType: 0
   monsterShadow: {fileID: 1798928964}
   xOffsetMultiplier: 1
+  visibleDistance: 10
+  percentChanceToSee: 10
 --- !u!61 &1520333350
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14081,6 +14083,8 @@ MonoBehaviour:
   spotType: 0
   monsterShadow: {fileID: 178893511}
   xOffsetMultiplier: 1
+  visibleDistance: 5
+  percentChanceToSee: 10
 --- !u!61 &1999624328
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14156,6 +14160,8 @@ MonoBehaviour:
   spotType: 0
   monsterShadow: {fileID: 1798928964}
   xOffsetMultiplier: 1
+  visibleDistance: 5
+  percentChanceToSee: 10
 --- !u!61 &2003112311
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14486,6 +14492,8 @@ MonoBehaviour:
   spotType: 1
   monsterShadow: {fileID: 1340796289}
   xOffsetMultiplier: 1
+  visibleDistance: 5
+  percentChanceToSee: 10
 --- !u!61 &2044092693
 BoxCollider2D:
   m_ObjectHideFlags: 0
