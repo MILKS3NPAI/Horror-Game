@@ -8,6 +8,8 @@ using System;
 public class InputManager : MonoBehaviour
 {
     public static PlayerControls inputActions;
+    private static bool notFirstLoad;
+    public static string interactKey = "R";
 
     public static event Action rebindCompleted;
     public static event Action rebindCanceled;
@@ -17,6 +19,12 @@ public class InputManager : MonoBehaviour
     {
         if (inputActions == null)
             inputActions = new PlayerControls();
+
+        if (!notFirstLoad)
+        {
+            notFirstLoad = true;
+            LoadBindingOverride("Interact");
+        }
     }
 
     public static void StartRebind(string actionName, int bindingIndex, Text statusText, bool excludeMouse)
@@ -101,6 +109,11 @@ public class InputManager : MonoBehaviour
         {
             PlayerPrefs.SetString(action.actionMap + action.name + i, action.bindings[i].overridePath);
         }
+
+        if (action.name.Equals("Interact"))
+        {
+            interactKey = action.GetBindingDisplayString();
+        }
     }
 
     public static void LoadBindingOverride(string actionName)
@@ -114,6 +127,11 @@ public class InputManager : MonoBehaviour
         {
             if (!string.IsNullOrEmpty(PlayerPrefs.GetString(action.actionMap + action.name + i)))
                 action.ApplyBindingOverride(i, PlayerPrefs.GetString(action.actionMap + action.name + i));
+        }
+
+        if (actionName.Equals("Interact"))
+        {
+            interactKey = action.GetBindingDisplayString();
         }
     }
 
@@ -136,5 +154,10 @@ public class InputManager : MonoBehaviour
             action.RemoveBindingOverride(bindingIndex);
 
         SaveBindingOverride(action);
+
+        if (actionName.Equals("Interact"))
+        {
+            interactKey = action.GetBindingDisplayString();
+        }
     }
 }

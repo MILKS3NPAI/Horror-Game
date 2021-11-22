@@ -19,6 +19,8 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            if (!content.Contains("[") && !content.Contains("]"))
+                content = "[" + InputManager.interactKey + "] " + content;
             tooltipObject = gameObject;
             TooltipSystem.Show(content, header);
         }
