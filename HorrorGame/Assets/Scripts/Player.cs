@@ -24,7 +24,7 @@ public class Player : Entity
 	protected override void Awake()
 	{
 		base.Awake();
-		playerControls = new PlayerControls();
+		playerControls = InputManager.inputActions;//new PlayerControls();
 		ConstantResources.Initialize();
 		mGroundFilter = ConstantResources.sPlayerGroundMask;
 		if (dialogue == null)
