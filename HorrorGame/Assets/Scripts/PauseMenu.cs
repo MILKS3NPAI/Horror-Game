@@ -9,6 +9,7 @@ public class PauseMenu : MonoBehaviour
     public static bool isPaused = false;
     public static float volume;
     public static bool notFirstLoad;
+    [SerializeField] bool isPauseMenu;
     [SerializeField] Camera camera;
     [SerializeField] GameObject pauseMenu, soundMenu;
     [SerializeField] Slider slider;
@@ -19,13 +20,16 @@ public class PauseMenu : MonoBehaviour
     //Initialize the PlayerControls Map to use 
     protected void Awake()
     {
-        try
+        if (isPauseMenu)
         {
-            player = FindObjectOfType<Player>().gameObject;
-        }
-        catch (System.Exception)
-        {
-            return;
+            try
+            {
+                player = FindObjectOfType<Player>().gameObject;
+            }
+            catch (System.Exception)
+            {
+                return;
+            }
         }
         playerControls = new PlayerControls();
     }

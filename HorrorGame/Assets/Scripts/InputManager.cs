@@ -45,7 +45,7 @@ public class InputManager : MonoBehaviour
         if (actionToRebind == null || bindingIndex < 0)
             return;
 
-        statusText.text = $"Press a {actionToRebind.expectedControlType}";
+        statusText.text = "...";//$"Press a {actionToRebind.expectedControlType}";
 
         actionToRebind.Disable();
 
@@ -79,7 +79,7 @@ public class InputManager : MonoBehaviour
 
         if (excludeMouse)
         {
-            rebind.WithControlsExcluding("Mouse");
+            //rebind.WithControlsExcluding("Mouse");
         }
 
         rebindStarted?.Invoke(actionToRebind, bindingIndex);
