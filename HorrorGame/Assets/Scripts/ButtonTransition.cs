@@ -15,7 +15,7 @@ public class ButtonTransition : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        buttonText.fontSize = 90;
+        buttonText.fontSize = 85;
         buttonText.faceColor = new Color32(0, 0, 0, 255);
         buttonText.outlineWidth = 0.2f;
     }
