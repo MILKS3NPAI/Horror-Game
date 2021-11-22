@@ -40,10 +40,21 @@ public class RebindUI : MonoBehaviour
 
         if (inputActionReference != null)
         {
+            InputManager.LoadBindingOverride(actionName);
             GetBindingInfo();
             UpdateUI();
         }
+
+        InputManager.rebindCompleted += UpdateUI;
+        InputManager.rebindCanceled += UpdateUI;
     }
+
+    private void OnDisable()
+    {
+        InputManager.rebindCompleted -= UpdateUI;
+        InputManager.rebindCanceled -= UpdateUI;
+    }
+
     private void OnValidate()
     {
         if (inputActionReference == null)
@@ -75,7 +86,7 @@ public class RebindUI : MonoBehaviour
         {
             if (Application.isPlaying)
             {
-                //get info from input manager
+                rebindText.text = InputManager.GetBindingName(actionName, bindingIndex);
             }
             else
             {
@@ -86,11 +97,12 @@ public class RebindUI : MonoBehaviour
 
     private void DoRebind()
     {
-        InputManager.StartRebind(actionName, bindingIndex, rebindText);
+        InputManager.StartRebind(actionName, bindingIndex, rebindText, excludeMouse);
     }
 
     private void ResetBinding()
     {
-
+        InputManager.ResetBinding(actionName, bindingIndex);
+        UpdateUI();
     }
 }
