@@ -191,13 +191,34 @@ public class Player : Entity
 		{
 			collision.gameObject.GetComponent<Animator>().SetBool("PlayerInDiningRoom", true);
 		}
+		else if (collision.transform.parent.gameObject.name.Equals("Kitchen"))
+        {
+			AudioManager.PlaySound("Fridge");
+        }
+		else if (collision.transform.parent.gameObject.name.Equals("Living Room"))
+		{
+			AudioManager.PlaySound("TV");
+		}
 		else
 		{
 			//Debug.Log("Player hit " + collision);
 		}
 	}
 
-	public void Kill()
+    public void OnTriggerExit2D(Collider2D collision)
+    {
+
+		if (collision.transform.parent.gameObject.name.Equals("Kitchen"))
+		{
+			AudioManager.StopSound("Fridge");
+		}
+		else if (collision.transform.parent.gameObject.name.Equals("Living Room"))
+		{
+			AudioManager.StopSound("TV");
+		}
+	}
+
+    public void Kill()
 	{
 		Debug.Log("I is dead", gameObject);
 		if (deathScreen != null)
