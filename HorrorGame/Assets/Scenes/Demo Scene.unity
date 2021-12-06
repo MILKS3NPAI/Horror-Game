@@ -20991,7 +20991,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hidingSpotCamera: {fileID: 1594043490}
   spotType: 0
-  monsterShadow: {fileID: 1798928964}
+  monsterShadow: {fileID: 539281551}
   xOffsetMultiplier: 1
   visibleDistance: 5
   percentChanceToSee: 10
