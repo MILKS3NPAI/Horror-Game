@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class Player : Entity
 {
@@ -13,6 +14,9 @@ public class Player : Entity
 	public PlayerControls mPlayerControls { get { return playerControls; } }
 	float direction;
 	[SerializeField] bool _hidden = false;
+
+	[Header ("ENABLE THIS (ONCE) FOR CUTSCENE")]
+	[SerializeField] bool escaped = false;
 	public bool mHidden { get { return _hidden; } set { if (_hidden == value) return; _hidden = value; collider.isTrigger = value; physicsEnabled = !value; } }
 	[SerializeField] GameObject deathScreen, flashlight;
 	//Get mouse poition
@@ -99,6 +103,8 @@ public class Player : Entity
 	{
 			AudioManager.MuteSound("Music2");
 			AudioManager.UnmuteSound("Music1");
+		if (escaped)
+			ShowCutscene();
 
 		//Flashlight
 		mouseAim = playerControls._2Dmovement.Aim.ReadValue<Vector2>();
@@ -173,18 +179,6 @@ public class Player : Entity
         */
 	}
 
-	// Determines what room the player is in
-	private string PlayerRoom()
-	{
-		if (transform.position.x >= 0)
-		{
-			return "right";
-		}
-		else
-		{
-			return "left";
-		}
-	}
 	public void OnTriggerEnter2D(Collider2D collision)
 	{
 		if (collision.transform.name.Equals("Chandelier"))
@@ -216,6 +210,26 @@ public class Player : Entity
 		{
 			AudioManager.StopSound("TV");
 		}
+	}
+	private void ShowCutscene()
+    {
+		transform.position = new Vector3(-7, -2f, 0.1118393f);
+		transform.rotation = new Quaternion(0, 0, 0, 0);
+		escaped = false;
+		AudioManager.StopSound("Music1");
+		AudioManager.StopSound("Music2");
+		AudioManager.MuteSound("TV");
+		//enemy.GetComponent<Enemy>().enabled = false;
+		VideoPlayer[] videoPlayers = FindObjectsOfType<VideoPlayer>();
+		foreach (VideoPlayer v in videoPlayers){
+			if (v.gameObject.transform.parent.gameObject.name.Equals("TV Static"))
+            {
+				v.gameObject.transform.parent.gameObject.SetActive(false);
+			}
+        }
+		enemy.GetComponent<Animator>().SetBool("CutsceneActive", true);
+		playerControls._2Dmovement.Move.Disable();
+		playerControls._2Dmovement.Jump.Disable();
 	}
 
     public void Kill()
