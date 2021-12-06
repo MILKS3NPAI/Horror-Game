@@ -20,5 +20,6 @@ public class DeathMenu : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         SceneManager.LoadScene(sceneName: "Demo Scene");
+        GameEngine.ReloadReferences();
     }
 }

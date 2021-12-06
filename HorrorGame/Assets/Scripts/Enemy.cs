@@ -207,7 +207,7 @@ public class Enemy : Entity
 		Debug.Log("Search enter");
 		Collider2D[] lResults = new Collider2D[2];
 		suspectedDoor = null;
-		if (Physics2D.OverlapBox(lastKnownLocation, Vector2.one * mMoveSpeed * Time.fixedDeltaTime, 0f, ConstantResources.sUseableMask, lResults) > 0)
+		if (Physics2D.OverlapBox(lastKnownLocation, mMoveSpeed * Time.fixedDeltaTime * Vector2.one, 0f, ConstantResources.sUseableMask, lResults) > 0)
 		{
 			foreach (Collider2D lCollider in lResults)
 			{

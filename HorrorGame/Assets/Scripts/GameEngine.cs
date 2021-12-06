@@ -14,6 +14,12 @@ public class GameEngine : MonoBehaviour
 	[SerializeField] GameObject[] deathScreens = new GameObject[ConstantResources.ArraySize<DeathType>()];
 	static bool gameRunning = true;
 
+	public static void ReloadReferences()
+	{
+		_player = null;
+		_enemy = null;
+	}
+
 	private void Awake()
 	{
 		mEngine = this;

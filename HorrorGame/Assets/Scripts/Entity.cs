@@ -84,6 +84,7 @@ public class Entity : MonoBehaviour
 	protected virtual void Awake()
 	{
 		Rigidbody2D lBody = GetComponent<Rigidbody2D>();
+		closestRelevantDoor = null;
 		if (lBody != null)
 		{
 			body = lBody;
@@ -279,9 +280,11 @@ public class Entity : MonoBehaviour
 		if (mClosestRelevantDoor == null || Mathf.Abs(iLocation.y - mPosition.y) <= verticalTolerance)
 		{
 			MoveRelative(new Vector2(iLocation.x - mPosition.x, 0));
+			//Debug.Log("Door: " + mClosestRelevantDoor + ", Mathf.abs: " + Mathf.Abs(iLocation.y - mPosition.y) + ", vert: " + verticalTolerance + ", Movement: " + new Vector2(iLocation.x - mPosition.x, 0), mClosestRelevantDoor);
 		}
 		else if (closestRelevantDoor != null)
 		{
+			//Debug.Log("Closest door not null");
 			MoveRelative(new Vector2(closestRelevantDoor.transform.position.x - mPosition.x, 0));
 			if (Mathf.Abs(closestRelevantDoor.transform.position.x - mPosition.x) <= useRadius)
 			{
