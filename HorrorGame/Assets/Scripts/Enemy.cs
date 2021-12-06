@@ -125,6 +125,7 @@ public class Enemy : Entity
 			GameEngine.sPlayer.Kill();
 			GameEngine.PlayDeathScreen(DeathType.CHASE_CONTACT);
 		}
+		sprite.flipX = previousEntityMovement.x < 0;
 		base.FixedUpdate();
 	}
 

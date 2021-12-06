@@ -16,6 +16,7 @@ public class HidingSpot : Useable
 	public float mVisibleDistance { get { return visibleDistance; } }
 	[SerializeField] float percentChanceToSee = 10f;
 	public float mChanceToSee { get { return percentChanceToSee; } }
+	SpriteRenderer monsterShadowSprite;
 
 	private void Awake()
 	{
@@ -47,6 +48,19 @@ public class HidingSpot : Useable
 		if (monsterShadow == null)
 		{
 			monsterShadow = hidingSpotCamera.transform.Find("MonsterShadow");
+			if (monsterShadow != null)
+			{
+				monsterShadowSprite = monsterShadow.GetComponent<SpriteRenderer>();
+				if (monsterShadowSprite == null)
+				{
+					monsterShadowSprite = monsterShadow.GetComponentInChildren<SpriteRenderer>();
+				}
+			}
+		}
+		monsterShadowSprite = monsterShadow.GetComponent<SpriteRenderer>();
+		if (monsterShadowSprite == null)
+		{
+			monsterShadowSprite = monsterShadow.GetComponentInChildren<SpriteRenderer>();
 		}
 		monsterShadow.gameObject.SetActive(false);
 	}
@@ -85,6 +99,7 @@ public class HidingSpot : Useable
 			lPlayer.mMovementDisabled = true;
 			AudioManager.PlaySound("Breathing");
 			monsterShadow.gameObject.SetActive(true);
+
 		}
 	}
 
@@ -94,6 +109,9 @@ public class HidingSpot : Useable
 		{
 			monsterShadow.gameObject.SetActive(mEnemy.mSameFloorAsPlayer);
 			monsterShadow.localPosition = new Vector3((mEnemy.mPosition.x - transform.position.x) * xOffsetMultiplier, monsterShadow.localPosition.y, monsterShadow.localPosition.z);
+
+			monsterShadowSprite.sprite = mEnemy.mSprite.sprite;
+			monsterShadowSprite.flipX = mEnemy.mSprite.flipX;
 		}
 	}
 }

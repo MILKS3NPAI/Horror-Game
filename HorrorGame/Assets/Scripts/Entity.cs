@@ -61,6 +61,7 @@ public class Entity : MonoBehaviour
 	public bool mVisible { get { return sprite.enabled; } set { sprite.enabled = value; mMovementDisabled = !sprite.enabled; collider.isTrigger = !sprite.enabled; } }
 	public Vector2 mPathTarget { get; protected set; }
 	public float mUseRadius { get { return useRadius; } }
+	public SpriteRenderer mSprite { get { return sprite; } protected set { sprite = value; } }
 	public DoorController mClosestRelevantDoor
 	{
 		get
@@ -76,7 +77,7 @@ public class Entity : MonoBehaviour
 			return closestRelevantDoor;
 		}
 	}
-	SpriteRenderer sprite;
+	protected SpriteRenderer sprite;
 	DoorController closestRelevantDoor;
 	static protected float verticalTolerance = 8f;
 	[SerializeField] protected float useRadius = 3f;
