@@ -19,6 +19,7 @@ public class Player : Entity
 	[SerializeField] bool escaped = false;
 	public bool mHidden { get { return _hidden; } set { if (_hidden == value) return; _hidden = value; collider.isTrigger = value; physicsEnabled = !value; } }
 	[SerializeField] GameObject deathScreen, flashlight;
+	[SerializeField] RuntimeAnimatorController enemyAnimator;
 	//Get mouse poition
 	Vector2 mousePos;
 	Vector2 mouseAim;
@@ -213,8 +214,6 @@ public class Player : Entity
 	}
 	private void ShowCutscene()
     {
-		transform.position = new Vector3(-7, -2f, 0.1118393f);
-		transform.rotation = new Quaternion(0, 0, 0, 0);
 		escaped = false;
 		AudioManager.StopSound("Music1");
 		AudioManager.StopSound("Music2");
@@ -227,9 +226,17 @@ public class Player : Entity
 				v.gameObject.transform.parent.gameObject.SetActive(false);
 			}
         }
-		enemy.GetComponent<Animator>().SetBool("CutsceneActive", true);
+		enemy.transform.position = new Vector3(-2f, -2f, -0.9161661f);
+		enemy.AddComponent<Animator>();
+		if (enemyAnimator != null)
+			enemy.GetComponent<Animator>().runtimeAnimatorController = enemyAnimator;
+		else
+			Debug.Log("Enemy animator controller not set");
+		enemy.gameObject.GetComponent<Animator>().SetBool("CutsceneActive", true);
 		playerControls._2Dmovement.Move.Disable();
 		playerControls._2Dmovement.Jump.Disable();
+		transform.position = new Vector3(-7f, -2f, 0.1118393f);
+		transform.rotation = new Quaternion(0, 0, 0, 0);
 	}
 
     public void Kill()
