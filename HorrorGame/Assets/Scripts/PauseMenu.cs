@@ -15,6 +15,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] Slider slider;
     //[SerializeField] Vector3 positionOffset;
     private GameObject player;
+    private static bool cannotPause;
     PlayerControls playerControls;
 
     //Initialize the PlayerControls Map to use 
@@ -44,6 +45,11 @@ public class PauseMenu : MonoBehaviour
         slider.value = volume;
         // += _ means blank, some inputs can return a value, you would do   += var => Function(var);
         playerControls.UI.Pause.performed += _ => Pause();
+    }
+    //Cutscene only
+    public static void PreventPause()
+    {
+        cannotPause = true;
     }
     //OnEnable and disbale are required in any script using an InputMap
     private void OnEnable()
@@ -97,13 +103,16 @@ public class PauseMenu : MonoBehaviour
     //Rename however you want
     public void Pause()
     {
-        if (isPaused)
+        if (!cannotPause)
         {
-            ResumeGame();
-        }
-        else
-        {
-            PauseGame();
+            if (isPaused)
+            {
+                ResumeGame();
+            }
+            else
+            {
+                PauseGame();
+            }
         }
     }
 }

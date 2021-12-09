@@ -20,6 +20,7 @@ public class Player : Entity
 	public bool mHidden { get { return _hidden; } set { if (_hidden == value) return; _hidden = value; collider.isTrigger = value; physicsEnabled = !value; } }
 	[SerializeField] GameObject deathScreen, flashlight;
 	[SerializeField] RuntimeAnimatorController enemyAnimator;
+	[SerializeField] Sprite cutsceneSprite;
 	//Get mouse poition
 	Vector2 mousePos;
 	Vector2 mouseAim;
@@ -215,6 +216,7 @@ public class Player : Entity
 	private void ShowCutscene()
     {
 		escaped = false;
+		PauseMenu.PreventPause();
 		AudioManager.StopSound("Music1");
 		AudioManager.StopSound("Music2");
 		AudioManager.MuteSound("TV");
@@ -236,7 +238,12 @@ public class Player : Entity
 		playerControls._2Dmovement.Move.Disable();
 		playerControls._2Dmovement.Jump.Disable();
 		transform.position = new Vector3(-7f, -2f, 0.1118393f);
-		transform.rotation = new Quaternion(0, 0, 0, 0);
+		if (cutsceneSprite != null)
+			transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().sprite = cutsceneSprite;
+		else
+			Debug.Log("Cutscene sprite not set");
+		cam.GetComponent<CameraFollow>().enabled = false;
+		cam.transform.position = transform.position + new Vector3(5, 1, -3);
 	}
 
     public void Kill()
