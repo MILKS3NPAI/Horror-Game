@@ -195,6 +195,12 @@ public class Player : Entity
 		{
 			AudioManager.PlaySound("TV");
 		}
+		else if (collision.transform.gameObject.name.Equals("RazorTrigger"))
+        {
+			AudioManager.PlaySound("RazorTrigger");
+			Destroy(collision.gameObject);
+			Debug.Log("Razor");
+        }
 		else
 		{
 			//Debug.Log("Player hit " + collision);

@@ -23,11 +23,13 @@ public class LightFlicker : MonoBehaviour
     {
         isFlick = true;
         this.gameObject.GetComponent<Light2D>().enabled = false;
+        //AudioManager.PlaySound("LightFlicker");
         timeDelay = Random.Range(0.01f, 0.2f);
         yield return new WaitForSeconds(timeDelay);
         this.gameObject.GetComponent<Light2D>().enabled = true;
         timeDelay = Random.Range(0.01f, 0.2f);
         yield return new WaitForSeconds(timeDelay);
+        //AudioManager.StopSound("LightFlicker");
         isFlick = false;
     }
 }
