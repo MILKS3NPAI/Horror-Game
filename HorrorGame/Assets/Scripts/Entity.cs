@@ -68,11 +68,23 @@ public class Entity : MonoBehaviour
 		{
 			if (closestRelevantDoor != null && Mathf.Abs(closestRelevantDoor.transform.position.y - mPosition.y) <= verticalTolerance) { GameEngine.LogToFile("Found at " + closestRelevantDoor.transform.position); return closestRelevantDoor; }
 			if (DoorController.sAllDoors.Count == 0) return null;
-			closestRelevantDoor = DoorController.sAllDoors[0];
+			closestRelevantDoor = null;
 			foreach (DoorController lController in DoorController.sAllDoors)
 			{
-				if (Mathf.Abs(lController.transform.position.y - mPosition.y) <= verticalTolerance && lController.GoesToward(mPathTarget.y - mPosition.y) && Mathf.Abs(lController.transform.position.x - mPosition.x) < Mathf.Abs(closestRelevantDoor.transform.position.x - mPosition.x))
-				{ closestRelevantDoor = lController; }
+				if ((!lController.GoesToward(mPathTarget.y - mPosition.y)) || Mathf.Abs(lController.transform.position.y - mPosition.y) > verticalTolerance)
+				{
+					continue;
+				}
+				if (closestRelevantDoor == null)
+				{
+					closestRelevantDoor = lController;
+				}
+				//if (Mathf.Abs(lController.transform.position.y - mPosition.y) <= verticalTolerance && lController.GoesToward(mPathTarget.y - mPosition.y) && Mathf.Abs(lController.transform.position.x - mPosition.x) < Mathf.Abs(closestRelevantDoor.transform.position.x - mPosition.x))
+				//if (Mathf.Abs(lController.transform.position.x - mPosition.x) < Mathf.Abs(closestRelevantDoor.transform.position.x - mPosition.x))
+				if (Vector2.Distance(lController.transform.position, mPosition2D) < Vector2.Distance(closestRelevantDoor.transform.position, mPosition2D))
+				{
+					closestRelevantDoor = lController;
+				}
 			}
 			return closestRelevantDoor;
 		}
@@ -287,7 +299,7 @@ public class Entity : MonoBehaviour
 		{
 			//Debug.Log("Closest door not null");
 			MoveRelative(new Vector2(closestRelevantDoor.transform.position.x - mPosition.x, 0));
-			if (Mathf.Abs(closestRelevantDoor.transform.position.x - mPosition.x) <= useRadius)
+			if (Mathf.Abs(closestRelevantDoor.transform.position.x - mPosition.x) <= useRadius && Mathf.Abs(closestRelevantDoor.transform.position.y - mPosition.y) <= verticalTolerance)
 			{
 				DoorTrigger lDoor = closestRelevantDoor.GetComponent<DoorTrigger>();
 				if (lDoor == null)
@@ -298,6 +310,7 @@ public class Entity : MonoBehaviour
 				{
 					lDoor.Use(this);
 					Debug.Log("Used door: " + lDoor, lDoor);
+					closestRelevantDoor = null;
 					return;
 				}
 				else
