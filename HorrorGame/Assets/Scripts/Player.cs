@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using TMPro;
 
 public class Player : Entity
 {
@@ -11,6 +12,9 @@ public class Player : Entity
 	private Dialogue dialogue;
 	private GameObject enemy;
 	private PlayerControls playerControls;
+	private bool canEscape = false;
+	[SerializeField] private TextMeshProUGUI playerText;
+	[SerializeField] private TextMeshProUGUI escapeText;
 	public PlayerControls mPlayerControls { get { return playerControls; } }
 	float direction;
 	[SerializeField] bool _hidden = false;
@@ -94,10 +98,12 @@ public class Player : Entity
 		if (lMovement.x < 0)
 		{
 			this.transform.localScale = new Vector3(-1 * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+
 		}
 		else if (lMovement.x > 0)
 		{
 			this.transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+
 		}
 		base.FixedUpdate();
 	}
@@ -201,9 +207,23 @@ public class Player : Entity
 			Destroy(collision.gameObject);
 			Debug.Log("Razor");
         }
-		else
+		else if(collision.transform.gameObject.name.Equals("Intro"))
+        {
+			playerText.gameObject.SetActive(true);
+			playerText.enabled = true;
+			playerText.text = "Turn on the fuse box";
+        }
+		else if (collision.transform.gameObject.name.Equals("Escape"))
 		{
-			//Debug.Log("Player hit " + collision);
+			escapeText.gameObject.SetActive(true);
+			escapeText.enabled = true;
+			escapeText.text = "Found Keys";
+			canEscape = true;
+			AudioManager.PlaySound("hell");
+		}
+		else if (collision.transform.gameObject.name.Equals("Exit") && canEscape == true)
+		{
+			escaped = true;
 		}
 	}
 
@@ -217,6 +237,18 @@ public class Player : Entity
 		else if (collision.transform.parent.gameObject.name.Equals("Living Room"))
 		{
 			AudioManager.StopSound("TV");
+		}
+		else if (collision.transform.gameObject.name.Equals("Intro"))
+		{
+			playerText.gameObject.SetActive(false);
+			playerText.enabled = false;
+			Destroy(collision.gameObject);
+		}
+		else if (collision.transform.gameObject.name.Equals("Escape"))
+		{
+			escapeText.gameObject.SetActive(false);
+			escapeText.enabled = false;
+			Destroy(collision.gameObject);
 		}
 	}
 	private void ShowCutscene()
