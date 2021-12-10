@@ -8,10 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Ron's Scene.unity
     guid: 82523004965df6c4aadd2bf13fddd82a
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Kevin's Scene.unity
     guid: 22265e021c7456d45846f85e9290eee1
   - enabled: 1
