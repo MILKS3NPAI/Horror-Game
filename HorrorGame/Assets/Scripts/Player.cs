@@ -64,6 +64,12 @@ public class Player : Entity
 		playerControls.UI.Interact.performed += _ => Use();
 		playerControls.UI.Interact.performed += _ => Interaction();
 		playerControls.UI.Flashlight_Toggle.performed += _ => ToggleFlashlight();
+		AudioManager.SetVolume("Music1", 0.015f);
+		AudioManager.SetVolume("Step1", 0.12f);
+		AudioManager.SetVolume("Step2", 0.015f);
+		AudioManager.SetVolume("TV", 0.005f);
+		AudioManager.SetVolume("Fridge", 0.008f);
+		AudioManager.SetVolume("Breathing", 0.030f);
 	}
 
 	private void OnEnable()
