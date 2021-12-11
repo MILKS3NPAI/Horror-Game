@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Kevin's Scene.unity
     guid: 22265e021c7456d45846f85e9290eee1
   - enabled: 1
+    path: Assets/Scenes/Intro.unity
+    guid: 7eb991874b3242e4a9d19a875f168c6f
+  - enabled: 1
     path: Assets/Scenes/Main Menu.unity
     guid: 608dee04b8e225d44a3845cb25978214
   - enabled: 1

@@ -192,6 +192,7 @@ public class Player : Entity
 		if (collision.transform.name.Equals("Chandelier"))
 		{
 			collision.gameObject.GetComponent<Animator>().SetBool("PlayerInDiningRoom", true);
+			AudioManager.PlaySound("Glass1");
 		}
 		else if (collision.transform.parent.gameObject.name.Equals("Kitchen"))
         {
@@ -234,6 +235,11 @@ public class Player : Entity
 		{
 			AudioManager.StopSound("Fridge");
 		}
+		else if (collision.transform.name.Equals("Chandelier"))
+		{
+			//collision.gameObject.GetComponent<Animator>().SetBool("PlayerInDiningRoom", true);
+			AudioManager.MuteSound("Glass1");
+		}
 		else if (collision.transform.parent.gameObject.name.Equals("Living Room"))
 		{
 			AudioManager.StopSound("TV");
@@ -242,6 +248,7 @@ public class Player : Entity
 		{
 			playerText.gameObject.SetActive(false);
 			playerText.enabled = false;
+			AudioManager.PlaySound("Signal1");
 			Destroy(collision.gameObject);
 		}
 		else if (collision.transform.gameObject.name.Equals("Escape"))
