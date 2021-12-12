@@ -8,6 +8,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager AM;
     public Sound[] sounds;
+    private static bool notFirstLoad;
 
     private void Awake()
     {
@@ -36,6 +37,13 @@ public class AudioManager : MonoBehaviour
             
         }
         PlaySound("Music1");
+        if (!notFirstLoad)
+        {
+            notFirstLoad = true;
+            PauseMenu.volume = 0.5f;
+        }
+        Debug.Log(PauseMenu.volume);
+        AudioManager.SetVolume(PauseMenu.volume);
     }
 
     public static void PlaySound(string name)
@@ -82,8 +90,9 @@ public class AudioManager : MonoBehaviour
     public static void SetVolume(string name, float volume)
     {
         Sound s = Array.Find(AM.sounds, sound => sound.name == name);
-        if (s != null)
+        if (s != null && s.source != null)
         {
+            //Debug.Log("SOURCE IS " + s.source);
             s.source.volume = volume;
             s.volume = volume;
         }
